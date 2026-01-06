@@ -51,13 +51,16 @@
         .accordion-content { transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; max-height: 0; opacity: 0; overflow: hidden; }
         .accordion-content.open { max-height: 1200px; opacity: 1; }
         
-        /* Timeline Line */
         .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background-color: #e5e7eb; transform: translateX(-50%); }
         .dark .timeline-line { background-color: #374151; }
         
         /* Audio Animation */
         @keyframes pulse-dot { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
         .speaking-dot { display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50% !important; margin-left: 8px; animation: pulse-dot 1.5s infinite; }
+        
+        /* Tab Active State Line */
+        .tab-active { border-bottom: 4px solid #175e52; color: #175e52; background-color: #f9fafb; }
+        .dark .tab-active { border-bottom: 4px solid #4ade80; color: #4ade80; background-color: #374151; }
     </style>
 </head>
 <body class="bg-bcg-gray text-bcg-dark dark:bg-gray-900 dark:text-gray-100 font-sans flex flex-col min-h-screen">
@@ -73,13 +76,8 @@
             </div>
             
             <div class="flex items-center space-x-4">
-                <button id="tts-btn" class="flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 hover:border-bcg-green dark:hover:border-green-500 bg-white dark:bg-gray-800 text-xs font-bold uppercase tracking-widest transition-all">
-                    <span id="tts-icon" class="mr-2 text-bcg-green dark:text-green-400">▶</span>
-                    <span id="tts-label" class="dark:text-gray-200">AUDIO BRIEF</span>
-                    <span id="tts-indicator" class="hidden speaking-dot"></span>
-                </button>
-                <div class="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
                 <button id="theme-toggle" class="p-2 text-gray-400 hover:text-bcg-green dark:hover:text-green-400 transition-colors"><span id="theme-icon">☾</span></button>
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
                 <button id="lang-toggle" class="text-xs font-bold px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-bcg-green dark:hover:bg-green-600 hover:text-white transition-colors border border-transparent">EN / 繁中</button>
             </div>
         </div>
@@ -87,10 +85,10 @@
 
     <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
 
-        <!-- Executive Summary & Context -->
+        <!-- Executive Summary -->
         <section class="mb-14">
             <div class="bg-bcg-green/10 dark:bg-green-900/20 border-l-4 border-bcg-green p-4 mb-6">
-                <p class="text-sm font-bold text-bcg-green dark:text-green-400 uppercase tracking-widest" data-i18n="target_audience">Target: Junior Dual Major (Sports Affairs + Economics)</p>
+                <p class="text-sm font-bold text-bcg-green dark:text-green-400 uppercase tracking-widest" data-i18n="target_audience">Target Strategy: Junior Dual Major (Sports Affairs + Economics)</p>
             </div>
             <h2 class="text-4xl md:text-5xl font-serif font-bold mb-8 leading-tight text-gray-900 dark:text-white">
                 <span data-i18n="hero_title_1">From Theory to Industry Leader</span><br>
@@ -113,14 +111,12 @@
             </div>
         </section>
 
-        <!-- Timeline: Road to Graduation -->
+        <!-- Timeline -->
         <section class="mb-16">
             <h3 class="text-xl font-bold font-serif pb-4 border-b border-gray-300 dark:border-gray-600 mb-8 text-gray-900 dark:text-white" data-i18n="section_timeline">Application Roadmap: Junior Year to Graduation</h3>
             <div class="relative">
                 <div class="timeline-line hidden md:block"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="timeline-container">
-                    <!-- JS Populated -->
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="timeline-container"></div>
             </div>
         </section>
 
@@ -137,12 +133,23 @@
             </div>
         </section>
 
-        <!-- Strategic Insights (Tabs) -->
-        <section class="mb-16">
-            <div class="flex justify-between items-end border-b border-gray-300 dark:border-gray-600 mb-0">
-                <h3 class="text-xl font-bold font-serif pb-4 text-gray-900 dark:text-white" data-i18n="section_research">Strategic Insights</h3>
-                <div class="flex space-x-1 overflow-x-auto" id="research-tabs-nav"></div>
+        <!-- Strategic Insights (Tabs + TTS) -->
+        <section class="mb-16" id="insights-section">
+            <div class="flex flex-col md:flex-row justify-between items-end border-b border-gray-300 dark:border-gray-600 mb-0 gap-4 md:gap-0">
+                <div class="flex items-center gap-4">
+                    <h3 class="text-xl font-bold font-serif pb-4 text-gray-900 dark:text-white mb-0" data-i18n="section_research">Strategic Insights</h3>
+                    
+                    <!-- Moved TTS Button Here -->
+                    <button id="tts-btn" class="flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 hover:border-bcg-green dark:hover:border-green-500 bg-white dark:bg-gray-800 text-[10px] font-bold uppercase tracking-widest transition-all mb-3 ml-2">
+                        <span id="tts-icon" class="mr-2 text-bcg-green dark:text-green-400">▶</span>
+                        <span id="tts-label" class="dark:text-gray-200">READ INSIGHT</span>
+                        <span id="tts-indicator" class="hidden speaking-dot"></span>
+                    </button>
+                </div>
+
+                <div class="flex space-x-1 overflow-x-auto w-full md:w-auto" id="research-tabs-nav"></div>
             </div>
+            
             <div id="research-content" class="bg-white dark:bg-gray-800 p-8 border border-t-0 border-gray-200 dark:border-gray-700 shadow-sharp"></div>
         </section>
 
@@ -179,13 +186,12 @@
 
     <footer class="bg-bcg-dark dark:bg-black text-white py-8 px-6 mt-12 border-t-4 border-bcg-green">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs">
-            <div class="mb-4 md:mb-0">
-                <span class="font-bold text-bcg-green dark:text-green-400 tracking-widest">GLOBAL STRATEGY</span>
-                <span class="mx-2">|</span>
-                <span class="opacity-60" id="version-date"></span>
+            <div class="mb-4 md:mb-0 opacity-70">
+                <p>Copyright © 2026 Global Sports Strategy Guide. All Rights Reserved.</p>
+                <p class="mt-1" id="version-date"></p>
             </div>
-            <div class="text-right opacity-60">
-                Editor: <a href="https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo" target="_blank" class="hover:text-white underline">Prof. Shihmin Lo</a>
+            <div class="text-right opacity-70">
+                Editor: <a href="https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo" target="_blank" class="hover:text-green-400 underline font-bold">Prof. Shihmin Lo</a>
             </div>
         </div>
     </footer>
@@ -207,11 +213,11 @@
                 list_header: "Program Directory & Analysis", list_count_label: "Programs Identified", section_research: "Strategic Insights",
                 tab_elite: "Elite Academic", tab_vb: "Volleyball Sector", tab_silver: "Silver Economy", tab_law: "Sports Law",
                 btn_reset: "Reset Filters", lbl_tuition: "Investment", lbl_duration: "Duration", lbl_courses: "Curriculum", lbl_alumni: "Network", lbl_career: "Career", lbl_web: "Portal",
-                tts_listen: "AUDIO BRIEF", tts_pause: "STOP AUDIO", tts_resume: "RESUME",
+                tts_listen: "READ INSIGHT", tts_pause: "STOP", tts_resume: "RESUME",
                 sport_all: "All Sectors", sport_vb: "Volleyball", sport_bb: "Baseball", sport_bkb: "Basketball", sport_bad: "Badminton", sport_tt: "Table Tennis", sport_mara: "Marathon", sport_cyc: "Cycling", sport_yoga: "Yoga/Fitness",
                 track_all: "All Tracks", track_elite: "Elite Academic (PhD)", track_applied: "Applied Industry (Master)",
                 region_all: "Global", region_usa: "USA", region_can: "Canada", region_oce: "Oceania", region_asia: "Asia",
-                unit_score: "Score (0-10)", unit_pct: "Percentage (%)", unit_index: "Index (2025=100)", unit_cases: "Case Distribution (%)"
+                unit_score: "Score (0-10)", unit_pct: "Percentage (%)", unit_index: "Index (2025=100)", unit_cases: "Distribution (%)"
             },
             zh: {
                 target_audience: "專屬策略：國際體育事務與經濟系雙主修大三學生",
@@ -225,7 +231,7 @@
                 list_header: "學程名錄與分析", list_count_label: "符合條件", section_research: "策略洞察",
                 tab_elite: "菁英學術路徑", tab_vb: "排球產業專題", tab_silver: "銀髮經濟趨勢", tab_law: "運動法律與合規",
                 btn_reset: "重置篩選", lbl_tuition: "預估投資", lbl_duration: "修業年限", lbl_courses: "核心課程", lbl_alumni: "校友網絡", lbl_career: "職涯路徑", lbl_web: "官方網站",
-                tts_listen: "朗讀洞察", tts_pause: "停止朗讀", tts_resume: "繼續朗讀",
+                tts_listen: "朗讀洞察", tts_pause: "停止", tts_resume: "繼續",
                 sport_all: "所有產業", sport_vb: "排球", sport_bb: "棒球", sport_bkb: "籃球", sport_bad: "羽球", sport_tt: "桌球", sport_mara: "馬拉松", sport_cyc: "自行車", sport_yoga: "瑜珈/健身",
                 track_all: "所有路徑", track_elite: "菁英學術 (PhD導向)", track_applied: "產業實務 (Master導向)",
                 region_all: "全球", region_usa: "美國", region_can: "加拿大", region_oce: "紐澳", region_asia: "亞洲",
@@ -233,7 +239,6 @@
             }
         };
 
-        // --- Timeline Data ---
         const timelineData = [
             { period_en: "Junior Spring (Feb - Jun)", period_zh: "大三下 (2月-6月)", title_en: "Academic & Research Foundation", title_zh: "學術與研究奠基", desc_en: "Maintain high GPA in Microeconomics/Stats. Join faculty research projects focusing on Sports Data.", desc_zh: "維持個體經濟與統計學的高 GPA。加入教授的運動數據或產業研究計畫。" },
             { period_en: "Junior Summer (Jul - Aug)", period_zh: "大三升大四暑假", title_en: "Testing & Industry Exposure", title_zh: "考試與實習衝刺", desc_en: "Intensive GRE/GMAT prep. Internship at sports leagues (CPBL/PLG) or law firms.", desc_zh: "GRE/GMAT 密集準備。尋找職業聯盟 (CPBL/PLG) 或法律事務所的實習機會。" },
@@ -242,16 +247,16 @@
         ];
 
         const glossaryData = [
-            { id: 'antitrust', term_en: 'Antitrust Law', term_zh: '反托拉斯法 (Antitrust)', def_en: "Legal framework promoting competition. Key in challenging league monopolies (e.g., NCAA NIL, Super League).", def_zh: "促進市場競爭的法律架構。常用於挑戰職業聯盟的壟斷地位（如 NCAA 的 NIL 案件）。" },
-            { id: 'moneyball', term_en: 'Sabermetrics', term_zh: '賽伯計量學 (Moneyball)', def_en: "Statistical analysis to identify undervalued assets in player markets.", def_zh: "利用統計分析在球員市場中尋找被低估的資產，是經濟系學生的核心優勢。" },
-            { id: 'cba', term_en: 'CBA', term_zh: '勞資協議 (CBA)', def_en: "Collective Bargaining Agreement determining salary caps and revenue sharing.", def_zh: "決定薪資上限與收益分享機制的勞資雙方協議。" },
-            { id: 'silver', term_en: 'Silver Economy', term_zh: '銀髮經濟 (Silver Econ)', def_en: "Economic activities driven by the needs of people aged 50+. Includes wellness and soft sports.", def_zh: "由50歲以上人口需求驅動的經濟活動。包含健康促進與軟式運動產業。" },
-            { id: 'posting', term_en: 'Posting System', term_zh: '入札制度 (Posting)', def_en: "Transfer system between MLB and NPB/KBO allowing players to sign with US teams.", def_zh: "連接美日韓職棒的球員轉隊制度，涉及龐大的轉隊費與國際合約談判。" },
-            { id: 'arbitration', term_en: 'Salary Arbitration', term_zh: '薪資仲裁 (Arbitration)', def_en: "A legal process to resolve salary disputes between players and teams using final-offer arbitration.", def_zh: "解決球員與球隊薪資爭議的法律程序，通常採用「最終報價仲裁」模式。" },
-            { id: 'nil', term_en: 'NIL', term_zh: '姓名形象權 (NIL)', def_en: "Name, Image, and Likeness rights allowing college athletes to monetize their personal brand.", def_zh: "允許大學運動員將個人品牌變現的權利，徹底改變了 NCAA 的經濟生態。" },
-            { id: 'titleix', term_en: 'Title IX', term_zh: '教育修正案第九條', def_en: "Federal law prohibiting sex discrimination in education, driving the growth of women's sports (Volleyball).", def_zh: "禁止教育性別歧視的聯邦法律，是推動女子排球與大學女子運動發展的基石。" },
-            { id: 'revenue', term_en: 'Revenue Sharing', term_zh: '收益分享 (Rev Share)', def_en: "Distribution of league revenues (TV, Merch) among teams to ensure competitive balance.", def_zh: "聯盟將電視轉播與商品收入分配給各隊的機制，旨在維持競爭平衡。" },
-            { id: 'franchise', term_en: 'Franchise Model', term_zh: '特許經營 (Franchise)', def_en: "Closed league system with no relegation, maximizing asset value for owners.", def_zh: "無升降級的封閉式聯盟體制，能最大化球團擁有者的資產價值。" }
+            { id: 'antitrust', term_en: 'Antitrust Law', term_zh: '反托拉斯法', def_en: "Legal framework promoting competition. Key in challenging league monopolies.", def_zh: "促進市場競爭的法律架構。常用於挑戰職業聯盟的壟斷地位。" },
+            { id: 'moneyball', term_en: 'Sabermetrics', term_zh: '賽伯計量學', def_en: "Statistical analysis to identify undervalued assets in player markets.", def_zh: "利用統計分析在球員市場中尋找被低估的資產。" },
+            { id: 'cba', term_en: 'CBA', term_zh: '勞資協議', def_en: "Collective Bargaining Agreement determining salary caps and revenue sharing.", def_zh: "決定薪資上限與收益分享機制的勞資雙方協議。" },
+            { id: 'silver', term_en: 'Silver Economy', term_zh: '銀髮經濟', def_en: "Economic activities driven by the needs of people aged 50+.", def_zh: "由50歲以上人口需求驅動的經濟活動。" },
+            { id: 'posting', term_en: 'Posting System', term_zh: '入札制度', def_en: "Transfer system between MLB and NPB/KBO allowing players to sign with US teams.", def_zh: "連接美日韓職棒的球員轉隊制度。" },
+            { id: 'arbitration', term_en: 'Salary Arbitration', term_zh: '薪資仲裁', def_en: "Legal process to resolve salary disputes via final-offer arbitration.", def_zh: "解決球員與球隊薪資爭議的法律程序。" },
+            { id: 'nil', term_en: 'NIL', term_zh: '姓名形象權', def_en: "Name, Image, and Likeness rights allowing college athletes to monetize their brand.", def_zh: "允許大學運動員將個人品牌變現的權利。" },
+            { id: 'titleix', term_en: 'Title IX', term_zh: '教育修正案第九條', def_en: "Law prohibiting sex discrimination, driving the growth of women's sports.", def_zh: "禁止教育性別歧視的聯邦法律。" },
+            { id: 'revenue', term_en: 'Revenue Sharing', term_zh: '收益分享', def_en: "Distribution of league revenues among teams to ensure competitive balance.", def_zh: "聯盟將收入分配給各隊以維持競爭平衡。" },
+            { id: 'franchise', term_en: 'Franchise Model', term_zh: '特許經營', def_en: "Closed league system with no relegation, maximizing asset value.", def_zh: "無升降級的封閉式聯盟體制。" }
         ];
 
         const researchData = {
@@ -304,6 +309,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('version-date').textContent = new Date().toISOString().split('T')[0];
             initApp();
+            // Pre-load voices
             if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
         });
 
@@ -339,7 +345,7 @@
             stopTTS();
             updateText();
             renderTimeline();
-            initGlossary(); // Restore selection logic handled inside
+            initGlossary();
             populateSelects();
             renderResearchTabs();
             renderDashboard();
@@ -405,7 +411,7 @@
             const tabs = ['elite', 'vb', 'silver', 'law'];
             
             nav.innerHTML = tabs.map(id => `
-                <button onclick="switchTab('${id}')" class="px-6 py-3 font-serif font-bold text-xs uppercase tracking-widest transition-all whitespace-nowrap ${state.activeTab === id ? 'text-bcg-green dark:text-green-400 border-b-4 border-bcg-green dark:border-green-500 bg-gray-50 dark:bg-gray-700' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}">
+                <button onclick="switchTab('${id}')" class="px-6 py-3 font-serif font-bold text-xs uppercase tracking-widest transition-all whitespace-nowrap ${state.activeTab === id ? 'tab-active' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}">
                     ${dictionary[state.lang]['tab_'+id]}
                 </button>
             `).join('');
@@ -461,7 +467,7 @@
             const voices = window.speechSynthesis.getVoices();
             let voice = null;
             if(state.lang === 'zh') {
-                voice = voices.find(v => v.name.includes('Google 國語')) || voices.find(v => v.name.includes('Yating')) || voices.find(v => v.lang.includes('zh'));
+                voice = voices.find(v => v.name.includes('Google 國語')) || voices.find(v => v.name.includes('Yating')) || voices.find(v => v.name.includes('Mei-Jia')) || voices.find(v => v.lang.includes('zh'));
             } else {
                 voice = voices.find(v => v.name.includes('Google UK English Male')) || voices.find(v => v.name.includes('Daniel')) || voices.find(v => v.lang.includes('en-GB') || v.lang.includes('en-US'));
             }
