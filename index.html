@@ -47,18 +47,23 @@
     <style>
         body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; transition: background-color 0.3s, color 0.3s; }
         * { border-radius: 0 !important; }
+        
         .chart-container { position: relative; width: 100%; height: 300px; }
         .accordion-content { transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; max-height: 0; opacity: 0; overflow: hidden; }
         .accordion-content.open { max-height: 1200px; opacity: 1; }
         
-        .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background-color: #e5e7eb; transform: translateX(-50%); }
-        .dark .timeline-line { background-color: #374151; }
-        
+        /* Flip Card Utilities */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+
         /* Audio Animation */
         @keyframes pulse-dot { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
         .speaking-dot { display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50% !important; margin-left: 8px; animation: pulse-dot 1.5s infinite; }
         
-        /* Tab Active State Line */
+        /* Tab Active State */
         .tab-active { border-bottom: 4px solid #175e52; color: #175e52; background-color: #f9fafb; }
         .dark .tab-active { border-bottom: 4px solid #4ade80; color: #4ade80; background-color: #374151; }
     </style>
@@ -111,35 +116,23 @@
             </div>
         </section>
 
-        <!-- Timeline -->
+        <!-- Timeline: Flip Cards -->
         <section class="mb-16">
             <h3 class="text-xl font-bold font-serif pb-4 border-b border-gray-300 dark:border-gray-600 mb-8 text-gray-900 dark:text-white" data-i18n="section_timeline">Application Roadmap: Junior Year to Graduation</h3>
-            <div class="relative">
-                <div class="timeline-line hidden md:block"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="timeline-container"></div>
-            </div>
-        </section>
-
-        <!-- Glossary -->
-        <section class="mb-16 bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-gray-700 shadow-sharp">
-            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6 border-b border-gray-100 dark:border-gray-700 pb-2" data-i18n="glossary_section">Core Terminology</h4>
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/3 border-r border-gray-100 dark:border-gray-700 pr-8">
-                    <select id="glossary-select" class="w-full bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-300 dark:border-gray-600 focus:border-bcg-green dark:focus:border-green-500 outline-none py-3 font-serif text-sm dark:text-white cursor-pointer transition-colors"></select>
-                </div>
-                <div class="md:w-2/3">
-                    <p id="glossary-def" class="text-lg font-serif text-bcg-dark dark:text-gray-200 leading-relaxed min-h-[4rem]"></p>
-                </div>
+            <!-- Grid for Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="timeline-container">
+                <!-- JS Populated Flip Cards -->
             </div>
         </section>
 
         <!-- Strategic Insights (Tabs + TTS) -->
+        <!-- Moved UP per request -->
         <section class="mb-16" id="insights-section">
             <div class="flex flex-col md:flex-row justify-between items-end border-b border-gray-300 dark:border-gray-600 mb-0 gap-4 md:gap-0">
                 <div class="flex items-center gap-4">
                     <h3 class="text-xl font-bold font-serif pb-4 text-gray-900 dark:text-white mb-0" data-i18n="section_research">Strategic Insights</h3>
                     
-                    <!-- Moved TTS Button Here -->
+                    <!-- TTS Button -->
                     <button id="tts-btn" class="flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 hover:border-bcg-green dark:hover:border-green-500 bg-white dark:bg-gray-800 text-[10px] font-bold uppercase tracking-widest transition-all mb-3 ml-2">
                         <span id="tts-icon" class="mr-2 text-bcg-green dark:text-green-400">▶</span>
                         <span id="tts-label" class="dark:text-gray-200">READ INSIGHT</span>
@@ -151,6 +144,20 @@
             </div>
             
             <div id="research-content" class="bg-white dark:bg-gray-800 p-8 border border-t-0 border-gray-200 dark:border-gray-700 shadow-sharp"></div>
+        </section>
+
+        <!-- Glossary -->
+        <!-- Moved DOWN per request -->
+        <section class="mb-16 bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-gray-700 shadow-sharp">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6 border-b border-gray-100 dark:border-gray-700 pb-2" data-i18n="glossary_section">Core Terminology</h4>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3 border-r border-gray-100 dark:border-gray-700 pr-8">
+                    <select id="glossary-select" class="w-full bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-300 dark:border-gray-600 focus:border-bcg-green dark:focus:border-green-500 outline-none py-3 font-serif text-sm dark:text-white cursor-pointer transition-colors"></select>
+                </div>
+                <div class="md:w-2/3">
+                    <p id="glossary-def" class="text-lg font-serif text-bcg-dark dark:text-gray-200 leading-relaxed min-h-[4rem]"></p>
+                </div>
+            </div>
         </section>
 
         <!-- Program Dashboard -->
@@ -213,11 +220,12 @@
                 list_header: "Program Directory & Analysis", list_count_label: "Programs Identified", section_research: "Strategic Insights",
                 tab_elite: "Elite Academic", tab_vb: "Volleyball Sector", tab_silver: "Silver Economy", tab_law: "Sports Law",
                 btn_reset: "Reset Filters", lbl_tuition: "Investment", lbl_duration: "Duration", lbl_courses: "Curriculum", lbl_alumni: "Network", lbl_career: "Career", lbl_web: "Portal",
-                tts_listen: "READ INSIGHT", tts_pause: "STOP", tts_resume: "RESUME",
+                tts_read: "READ INSIGHT", tts_pause: "STOP", tts_resume: "RESUME",
                 sport_all: "All Sectors", sport_vb: "Volleyball", sport_bb: "Baseball", sport_bkb: "Basketball", sport_bad: "Badminton", sport_tt: "Table Tennis", sport_mara: "Marathon", sport_cyc: "Cycling", sport_yoga: "Yoga/Fitness",
                 track_all: "All Tracks", track_elite: "Elite Academic (PhD)", track_applied: "Applied Industry (Master)",
                 region_all: "Global", region_usa: "USA", region_can: "Canada", region_oce: "Oceania", region_asia: "Asia",
-                unit_score: "Score (0-10)", unit_pct: "Percentage (%)", unit_index: "Index (2025=100)", unit_cases: "Distribution (%)"
+                unit_score: "Score (0-10)", unit_pct: "Percentage (%)", unit_index: "Index (2025=100)", unit_cases: "Distribution (%)",
+                card_front_hint: "HOVER TO VIEW ACTIONS"
             },
             zh: {
                 target_audience: "專屬策略：國際體育事務與經濟系雙主修大三學生",
@@ -231,19 +239,20 @@
                 list_header: "學程名錄與分析", list_count_label: "符合條件", section_research: "策略洞察",
                 tab_elite: "菁英學術路徑", tab_vb: "排球產業專題", tab_silver: "銀髮經濟趨勢", tab_law: "運動法律與合規",
                 btn_reset: "重置篩選", lbl_tuition: "預估投資", lbl_duration: "修業年限", lbl_courses: "核心課程", lbl_alumni: "校友網絡", lbl_career: "職涯路徑", lbl_web: "官方網站",
-                tts_listen: "朗讀洞察", tts_pause: "停止", tts_resume: "繼續",
+                tts_read: "朗讀洞察", tts_pause: "停止", tts_resume: "繼續",
                 sport_all: "所有產業", sport_vb: "排球", sport_bb: "棒球", sport_bkb: "籃球", sport_bad: "羽球", sport_tt: "桌球", sport_mara: "馬拉松", sport_cyc: "自行車", sport_yoga: "瑜珈/健身",
                 track_all: "所有路徑", track_elite: "菁英學術 (PhD導向)", track_applied: "產業實務 (Master導向)",
                 region_all: "全球", region_usa: "美國", region_can: "加拿大", region_oce: "紐澳", region_asia: "亞洲",
-                unit_score: "評分 (0-10)", unit_pct: "佔比 (%)", unit_index: "指數 (2025=100)", unit_cases: "案件分佈 (%)"
+                unit_score: "評分 (0-10)", unit_pct: "佔比 (%)", unit_index: "指數 (2025=100)", unit_cases: "案件分佈 (%)",
+                card_front_hint: "懸停查看行動方針"
             }
         };
 
         const timelineData = [
-            { period_en: "Junior Spring (Feb - Jun)", period_zh: "大三下 (2月-6月)", title_en: "Academic & Research Foundation", title_zh: "學術與研究奠基", desc_en: "Maintain high GPA in Microeconomics/Stats. Join faculty research projects focusing on Sports Data.", desc_zh: "維持個體經濟與統計學的高 GPA。加入教授的運動數據或產業研究計畫。" },
-            { period_en: "Junior Summer (Jul - Aug)", period_zh: "大三升大四暑假", title_en: "Testing & Industry Exposure", title_zh: "考試與實習衝刺", desc_en: "Intensive GRE/GMAT prep. Internship at sports leagues (CPBL/PLG) or law firms.", desc_zh: "GRE/GMAT 密集準備。尋找職業聯盟 (CPBL/PLG) 或法律事務所的實習機會。" },
-            { period_en: "Senior Fall (Sep - Dec)", period_zh: "大四上 (9月-12月)", title_en: "Application Strategy", title_zh: "申請送件策略", desc_en: "Draft SOP highlighting 'Dual Major' unique value. Submit Round 1 applications for US schools.", desc_zh: "撰寫 SOP，強調「雙主修」的獨特跨領域價值。遞交美國學校第一輪申請。" },
-            { period_en: "Senior Spring (Jan - Jun)", period_zh: "大四下 (1月-6月)", title_en: "Decision & Funding", title_zh: "決策與獎學金", desc_en: "Prepare for interviews. Apply for Ministry of Education scholarships. Finalize school choice.", desc_zh: "面試準備。申請教育部留學獎學金。確認最終入學學校。" }
+            { period_en: "Junior Spring (Feb - Jun)", period_zh: "大三下 (2月-6月)", title_en: "Academic & Research Foundation", title_zh: "學術與研究奠基", desc_en: "• Maintain high GPA in Microeconomics/Stats.\n• Join faculty research projects focusing on Sports Data.", desc_zh: "• 維持個體經濟與統計學的高 GPA。\n• 加入教授的運動數據或產業研究計畫。" },
+            { period_en: "Junior Summer (Jul - Aug)", period_zh: "大三升大四暑假", title_en: "Testing & Industry Exposure", title_zh: "考試與實習衝刺", desc_en: "• Intensive GRE/GMAT prep.\n• Internship at sports leagues (CPBL/PLG) or law firms.", desc_zh: "• GRE/GMAT 密集準備。\n• 尋找職業聯盟 (CPBL/PLG) 或法律事務所的實習機會。" },
+            { period_en: "Senior Fall (Sep - Dec)", period_zh: "大四上 (9月-12月)", title_en: "Application Strategy", title_zh: "申請送件策略", desc_en: "• Draft SOP highlighting 'Dual Major' unique value.\n• Submit Round 1 applications for US schools.", desc_zh: "• 撰寫 SOP，強調「雙主修」的獨特跨領域價值。\n• 遞交美國學校第一輪申請。" },
+            { period_en: "Senior Spring (Jan - Jun)", period_zh: "大四下 (1月-6月)", title_en: "Decision & Funding", title_zh: "決策與獎學金", desc_en: "• Prepare for interviews.\n• Apply for Ministry of Education scholarships.\n• Finalize school choice.", desc_zh: "• 面試準備。\n• 申請教育部留學獎學金。\n• 確認最終入學學校。" }
         ];
 
         const glossaryData = [
@@ -294,7 +303,7 @@
             { id: 4, name_en: "Univ. of Nebraska-Lincoln", name_zh: "內布拉斯加大學林肯分校", region: "USA", track: "Applied", sports: ["Volleyball"], tuition: "$35k/yr", duration: "1.5 Yr", courses_en: "Fan Engagement, Event Mgmt", courses_zh: "粉絲互動, 賽事管理", alumni_en: "NCAA Directors", alumni_zh: "NCAA 總監", career_en: "Volleyball Ops", career_zh: "排球營運", web: "https://business.unl.edu/", scores: {theory:7, practice:10, legal:5, health:5} },
             { id: 5, name_en: "Rice University", name_zh: "萊斯大學", region: "USA", track: "Applied", sports: ["Baseball"], tuition: "$55k/yr", duration: "1-2 Yr", courses_en: "Econometrics, Moneyball", courses_zh: "計量經濟, 魔球", alumni_en: "MLB Analytics Heads", alumni_zh: "MLB 數據主管", career_en: "Data Analyst", career_zh: "數據分析師", web: "https://sport.rice.edu/", scores: {theory:9, practice:8, legal:4, health:4} },
             { id: 6, name_en: "University of Florida", name_zh: "佛羅里達大學", region: "USA", track: "Applied", sports: ["Volleyball", "Fitness"], tuition: "$40k/yr", duration: "2 Yr", courses_en: "Sport Law, Human Performance", courses_zh: "運動法律, 人類表現", alumni_en: "SEC Execs", alumni_zh: "SEC 高管", career_en: "Wellness Director", career_zh: "健康總監", web: "https://hhp.ufl.edu/", scores: {theory:8, practice:8, legal:8, health:9} },
-            { id: 7, name_en: "University of Oregon", name_zh: "奧勒岡大學", region: "USA", track: "Applied", sports: ["Marathon"], tuition: "$60k/yr", duration: "2 Yr", courses_en: "Sponsorship, Brand Strategy", courses_zh: "贊助, 品牌策略", alumni_en: "Nike VPs", alumni_zh: "Nike 副總裁", career_en: "Brand Manager", career_zh: "品牌經理", web: "https://business.uoregon.edu/", scores: {theory:7, practice:10, legal:6, health:6} },
+            { id: 7, name_en: "University of Oregon", name_zh: "奧勒岡大學", region: "USA", track: "Applied", sports: ["Marathon", "Basketball"], tuition: "$60k/yr", duration: "2 Yr", courses_en: "Sponsorship, Brand Strategy", courses_zh: "贊助, 品牌策略", alumni_en: "Nike VPs", alumni_zh: "Nike 副總裁", career_en: "Brand Manager", career_zh: "品牌經理", web: "https://business.uoregon.edu/", scores: {theory:7, practice:10, legal:6, health:6} },
             { id: 14, name_en: "NUS Singapore", name_zh: "新加坡國立大學", region: "Asia", track: "Applied", sports: ["Badminton", "TableTennis"], tuition: "$45k/yr", duration: "1-2 Yr", courses_en: "Public Policy, Smart Nation", courses_zh: "公共政策, 智慧國家", alumni_en: "Gov Ministers", alumni_zh: "政府部長", career_en: "Policy Advisor", career_zh: "政策顧問", web: "https://lkyspp.nus.edu.sg/", scores: {theory:9, practice:7, legal:6, health:7} },
             { id: 8, name_en: "Waseda University", name_zh: "早稻田大學", region: "Asia", track: "Applied", sports: ["Baseball", "Volleyball"], tuition: "¥1.5M/yr", duration: "2 Yr", courses_en: "Sport Policy, Aging Society", courses_zh: "體育政策, 高齡社會", alumni_en: "J-League Execs", alumni_zh: "J-League 高層", career_en: "Policy Maker", career_zh: "政策制定", web: "https://www.waseda.jp/", scores: {theory:8, practice:9, legal:6, health:9} },
             { id: 9, name_en: "University of Tsukuba", name_zh: "筑波大學", region: "Asia", track: "Applied", sports: ["Volleyball", "Yoga"], tuition: "¥535k/yr", duration: "2 Yr", courses_en: "Biomechanics, Coaching", courses_zh: "生物力學, 教練學", alumni_en: "Olympic Medalists", alumni_zh: "奧運獎牌得主", career_en: "Researcher", career_zh: "研究員", web: "http://tias.tsukuba.ac.jp/", scores: {theory:8, practice:8, legal:5, health:10} },
@@ -305,12 +314,20 @@
         ];
 
         let activeChart = null, radarChart = null, ttsUtterance = null;
+        let synthesis = window.speechSynthesis;
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('version-date').textContent = new Date().toISOString().split('T')[0];
             initApp();
-            // Pre-load voices
-            if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
+            
+            // Poll for voices (Browser fix)
+            let voiceAttempts = 0;
+            const loadVoices = setInterval(() => {
+                if (synthesis.getVoices().length > 0 || voiceAttempts > 10) {
+                    clearInterval(loadVoices);
+                }
+                voiceAttempts++;
+            }, 100);
         });
 
         function initApp() {
@@ -326,7 +343,7 @@
         function initSettings() {
             document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
             document.getElementById('lang-toggle').addEventListener('click', toggleLang);
-            document.getElementById('tts-btn').addEventListener('click', toggleTTS);
+            document.getElementById('tts-btn').addEventListener('click', toggleReader);
             document.getElementById('reset-btn').addEventListener('click', resetFilters);
             ['track', 'region', 'sport'].forEach(id => document.getElementById(`${id}-select`).addEventListener('change', e => { state.filters[id] = e.target.value; renderDashboard(); }));
         }
@@ -342,7 +359,7 @@
 
         function toggleLang() {
             state.lang = state.lang === 'en' ? 'zh' : 'en';
-            stopTTS();
+            stopReader();
             updateText();
             renderTimeline();
             initGlossary();
@@ -357,7 +374,7 @@
                 const key = el.getAttribute('data-i18n');
                 if(dict[key]) el.textContent = dict[key];
             });
-            updateTTSButton(false);
+            updateReaderUI(false);
         }
 
         function populateSelects() {
@@ -385,14 +402,29 @@
             };
         }
 
+        // --- New Timeline Flip Cards ---
         function renderTimeline() {
             const container = document.getElementById('timeline-container');
             const isZh = state.lang === 'zh';
-            container.innerHTML = timelineData.map((t, index) => `
-                <div class="relative bg-white dark:bg-gray-800 p-6 border-l-4 ${index%2===0 ? 'border-bcg-green dark:border-green-500 md:text-right md:border-r-4 md:border-l-0' : 'border-bcg-accent dark:border-green-400'} shadow-sm">
-                    <span class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1 block">${isZh ? t.period_zh : t.period_en}</span>
-                    <h4 class="text-lg font-serif font-bold text-bcg-dark dark:text-white mb-2">${isZh ? t.title_zh : t.title_en}</h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">${isZh ? t.desc_zh : t.desc_en}</p>
+            const hint = dictionary[state.lang].card_front_hint;
+            
+            container.innerHTML = timelineData.map((t) => `
+                <div class="group h-64 w-full perspective-1000 cursor-pointer">
+                    <div class="relative h-full w-full transition-all duration-700 transform-style-3d group-hover:rotate-y-180">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden bg-white dark:bg-gray-800 p-6 border-l-4 border-bcg-green dark:border-green-500 shadow-sm flex flex-col justify-center">
+                            <span class="text-xs font-bold text-bcg-green dark:text-green-400 tracking-widest uppercase mb-2 block">${isZh ? t.period_zh : t.period_en}</span>
+                            <h4 class="text-xl font-serif font-bold text-bcg-dark dark:text-white leading-tight">${isZh ? t.title_zh : t.title_en}</h4>
+                            <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+                                <span class="text-[10px] uppercase tracking-widest text-gray-400">${hint} &rarr;</span>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 bg-bcg-green dark:bg-green-800 p-6 shadow-sm flex flex-col justify-center text-white">
+                            <h4 class="text-sm font-bold uppercase tracking-widest mb-3 opacity-80 border-b border-white/20 pb-2">Action Plan</h4>
+                            <p class="text-sm leading-relaxed whitespace-pre-line font-sans">${isZh ? t.desc_zh : t.desc_en}</p>
+                        </div>
+                    </div>
                 </div>
             `).join('');
         }
@@ -438,66 +470,98 @@
 
         window.switchTab = (id) => {
             state.activeTab = id;
-            stopTTS();
+            stopReader();
             renderResearchTabs();
         };
 
-        // --- TTS Engine (Fixed) ---
-        function toggleTTS() {
-            if (window.speechSynthesis.speaking) {
-                stopTTS();
+        // --- Simplified TTS Engine ---
+        function toggleReader() {
+            if (synthesis.speaking || synthesis.pending) {
+                stopReader();
             } else {
-                startTTS();
+                startReader();
             }
         }
 
-        function startTTS() {
-            window.speechSynthesis.cancel();
-            
+        function stopReader() {
+            synthesis.cancel();
+            updateReaderUI(false);
+        }
+
+        function startReader() {
+            synthesis.cancel();
+
             const data = researchData[state.activeTab];
             const title = state.lang === 'zh' ? data.title_zh : data.title_en;
             const text = state.lang === 'zh' ? data.content_zh : data.content_en;
-            const intro = state.lang === 'zh' ? "策略洞察：" : "Strategic Insight: ";
-            
-            const fullText = intro + title + ". " + text;
-            ttsUtterance = new SpeechSynthesisUtterance(fullText);
-            
-            ttsUtterance.lang = state.lang === 'zh' ? 'zh-TW' : 'en-US';
-            
-            const voices = window.speechSynthesis.getVoices();
+            const fullText = title + ". " + text;
+
+            const u = new SpeechSynthesisUtterance(fullText);
+            u.lang = state.lang === 'zh' ? 'zh-TW' : 'en-GB';
+            u.rate = 0.9; 
+
+            const voices = synthesis.getVoices();
             let voice = null;
-            if(state.lang === 'zh') {
-                voice = voices.find(v => v.name.includes('Google 國語')) || voices.find(v => v.name.includes('Yating')) || voices.find(v => v.name.includes('Mei-Jia')) || voices.find(v => v.lang.includes('zh'));
+            if (state.lang === 'zh') {
+                voice = voices.find(v => v.name.includes("Yating")) || 
+                        voices.find(v => v.name.includes("Mei-Jia")) || 
+                        voices.find(v => v.name.includes("Google 國語")) ||
+                        voices.find(v => v.lang === "zh-TW");
             } else {
-                voice = voices.find(v => v.name.includes('Google UK English Male')) || voices.find(v => v.name.includes('Daniel')) || voices.find(v => v.lang.includes('en-GB') || v.lang.includes('en-US'));
+                voice = voices.find(v => v.name.includes("Google UK English Male")) || 
+                        voices.find(v => v.name.includes("Daniel")) || 
+                        voices.find(v => v.lang === "en-GB");
             }
-            if(voice) ttsUtterance.voice = voice;
-            
-            ttsUtterance.onstart = () => updateTTSButton(true);
-            ttsUtterance.onend = () => updateTTSButton(false);
-            ttsUtterance.onerror = (e) => { console.log(e); updateTTSButton(false); };
+            if (voice) u.voice = voice;
 
-            setTimeout(() => window.speechSynthesis.speak(ttsUtterance), 50);
+            u.onend = () => updateReaderUI(false);
+            u.onerror = (e) => { console.log(e); updateReaderUI(false); };
+
+            updateReaderUI(true);
+            synthesis.speak(u);
         }
 
-        function stopTTS() {
-            window.speechSynthesis.cancel();
-            updateTTSButton(false);
-        }
-
-        function updateTTSButton(playing) {
+        function updateReaderUI(isReading) {
             const icon = document.getElementById('tts-icon');
             const label = document.getElementById('tts-label');
-            const indicator = document.getElementById('tts-indicator');
+            const dot = document.getElementById('tts-indicator');
             const dict = dictionary[state.lang];
 
-            if (playing) {
-                icon.textContent = "■"; label.textContent = dict.tts_pause;
-                indicator.classList.remove('hidden');
+            if (isReading) {
+                icon.textContent = "■";
+                label.textContent = dict.tts_pause;
+                dot.classList.remove('hidden');
             } else {
-                icon.textContent = "▶"; label.textContent = dict.tts_listen;
-                indicator.classList.add('hidden');
+                icon.textContent = "▶";
+                label.textContent = dict.tts_read;
+                dot.classList.add('hidden');
             }
+        }
+
+        function renderResearchChart() {
+            const ctx = document.getElementById('researchChart'); if(!ctx) return;
+            if(activeChart) activeChart.destroy();
+            
+            const isZh = state.lang === 'zh';
+            const isDark = state.theme === 'dark';
+            const colors = isDark ? ['#10b981', '#34d399', '#6b7280'] : ['#175e52', '#2d8a76', '#9ca3af'];
+            const textColor = isDark ? '#9ca3af' : '#4b5563';
+            const unit = dictionary[state.lang][researchData[state.activeTab].unitId];
+
+            let config = { type: 'bar', data: {}, options: { maintainAspectRatio: false, plugins: {legend: {position:'bottom', labels: {color: textColor, font:{family:'Inter'}}}} } };
+
+            if(state.activeTab === 'elite') {
+                config.type = 'doughnut'; config.data = { labels: isZh?['理論','政策','管理']:['Theory','Policy','Mgmt'], datasets: [{ data: [50,30,20], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
+            } else if(state.activeTab === 'vb') {
+                config.data = { labels: isZh?['美國','日本','台灣']:['USA','Japan','Taiwan'], datasets: [{ label: isZh?'成熟度':'Maturity', data: [5,8,2], backgroundColor: colors[0] }, { label: isZh?'自由度':'Freedom', data: [9,6,3], backgroundColor: colors[2] }]};
+                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
+            } else if(state.activeTab === 'silver') {
+                config.type = 'line'; config.data = { labels: ['2025','2030','2035'], datasets: [{ label: isZh?'預估節省':'Savings', data: [100,150,220], borderColor: colors[0], backgroundColor: isDark ? 'rgba(16,185,129,0.1)' : 'rgba(23,94,82,0.1)', fill: true }]};
+                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
+            } else {
+                config.type = 'pie'; config.data = { labels: isZh?['合約','反托拉斯','智財']:['Contract','Antitrust','IP'], datasets: [{ data: [40,35,25], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
+            }
+            activeChart = new Chart(ctx, config);
         }
 
         function renderDashboard() {
@@ -575,34 +639,6 @@
                 }
             });
         }
-
-        function renderResearchChart() {
-            const ctx = document.getElementById('researchChart'); if(!ctx) return;
-            if(activeChart) activeChart.destroy();
-            
-            const isZh = state.lang === 'zh';
-            const isDark = state.theme === 'dark';
-            const colors = isDark ? ['#10b981', '#34d399', '#6b7280'] : ['#175e52', '#2d8a76', '#9ca3af'];
-            const textColor = isDark ? '#9ca3af' : '#4b5563';
-            const unit = dictionary[state.lang][researchData[state.activeTab].unitId];
-
-            let config = { type: 'bar', data: {}, options: { maintainAspectRatio: false, plugins: {legend: {position:'bottom', labels: {color: textColor, font:{family:'Inter'}}}} } };
-
-            if(state.activeTab === 'elite') {
-                config.type = 'doughnut'; config.data = { labels: isZh?['理論','政策','管理']:['Theory','Policy','Mgmt'], datasets: [{ data: [50,30,20], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
-            } else if(state.activeTab === 'vb') {
-                config.data = { labels: isZh?['美國','日本','台灣']:['USA','Japan','Taiwan'], datasets: [{ label: isZh?'成熟度':'Maturity', data: [5,8,2], backgroundColor: colors[0] }, { label: isZh?'自由度':'Freedom', data: [9,6,3], backgroundColor: colors[2] }]};
-                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
-            } else if(state.activeTab === 'silver') {
-                config.type = 'line'; config.data = { labels: ['2025','2030','2035'], datasets: [{ label: isZh?'預估節省':'Savings', data: [100,150,220], borderColor: colors[0], backgroundColor: isDark ? 'rgba(16,185,129,0.1)' : 'rgba(23,94,82,0.1)', fill: true }]};
-                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
-            } else {
-                config.type = 'pie'; config.data = { labels: isZh?['合約','反托拉斯','智財']:['Contract','Antitrust','IP'], datasets: [{ data: [40,35,25], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
-            }
-            activeChart = new Chart(ctx, config);
-        }
-        
-        window.speechSynthesis.onvoiceschanged = () => {};
     </script>
 </body>
 </html>
