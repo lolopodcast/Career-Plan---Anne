@@ -1,41 +1,43 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="light">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Sports Economics & Volleyball Studies Guide | 國際體育經濟留學指南</title>
+    <title>Global Sports Strategy 2026 | Strategic Report</title>
     
-    <!-- Tailwind CSS (Via CDN) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Chart.js (Via CDN) -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Google Fonts: Noto Sans TC (Traditional Chinese) & Inter (English) -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Merriweather (Serif) & Inter (Sans) -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind Config for Dark Mode and Brand Colors -->
+    <!-- Config -->
     <script>
         tailwind.config = {
-            darkMode: 'class',
+            darkMode: 'class', // Manual toggle
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['"Inter"', '"Noto Sans TC"', 'sans-serif'],
+                        serif: ['"Merriweather"', '"Noto Sans TC"', 'serif'],
                     },
                     colors: {
-                        brand: {
-                            50: '#f9f8f6',  // Light bg
-                            100: '#eef0f2',
-                            200: '#dce0e5',
-                            500: '#64748b', // Slate
-                            600: '#475569',
-                            800: '#1e293b', // Dark bg
-                            900: '#0f172a', // Deep Dark
-                            accent: '#d97706', // Amber 600 (Primary Action)
-                            accentHover: '#b45309',
-                            accentDark: '#fbbf24', // Amber 400 (Dark mode accent)
+                        bcg: {
+                            green: '#175e52',   // BCG Deep Emerald
+                            dark: '#1f2937',    // Slate Dark
+                            gray: '#f9fafb',    // Paper White
+                            border: '#e5e7eb',
+                            accent: '#2d8a76',
                         }
+                    },
+                    boxShadow: {
+                        'sharp': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    },
+                    borderRadius: {
+                        'none': '0px', // STRICT SHARP EDGES
                     }
                 }
             }
@@ -43,818 +45,567 @@
     </script>
 
     <style>
-        /* MANDATORY: Chart Container Styling */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
+        /* Professional Reset */
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; transition: background-color 0.3s, color 0.3s; }
+        
+        /* Force Sharp Edges */
+        * { border-radius: 0 !important; }
 
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
+        /* Chart Container */
+        .chart-container { position: relative; width: 100%; height: 300px; }
 
-        /* Smooth Transitions for Theme Switching */
-        body, div, nav, section, h1, h2, h3, p, span, button, select, input {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
+        /* Accordion */
+        .accordion-content { transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; max-height: 0; opacity: 0; overflow: hidden; }
+        .accordion-content.open { max-height: 1200px; opacity: 1; }
 
-        /* Custom Scrollbar */
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
+        /* Audio Animation */
+        @keyframes pulse-dot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
         }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 3px;
-        }
-        .dark .custom-scroll::-webkit-scrollbar-thumb {
-            background-color: #475569;
+        .speaking-dot {
+            display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50% !important; margin-left: 8px; animation: pulse-dot 1.5s infinite;
         }
     </style>
 </head>
-<body class="bg-brand-50 text-brand-800 dark:bg-brand-900 dark:text-brand-100 font-sans leading-relaxed selection:bg-brand-accent selection:text-white flex flex-col min-h-screen">
+<body class="bg-bcg-gray text-bcg-dark dark:bg-gray-900 dark:text-gray-100 font-sans flex flex-col min-h-screen">
 
-    <!-- REQUIRED PLACEHOLDERS -->
-    <!-- Chosen Palette: Bilingual Support + Dark Mode. Warm Neutrals (Light) / Deep Slate (Dark) with Amber Accents. -->
-    
-    <!-- Application Structure Plan:
-         1. Header: Settings (Lang/Theme) & Navigation.
-         2. Hero: Context validation (Econ + Sports + Volleyball focus).
-         3. Research Insights (Split into Silver Economy & Volleyball): Detailed text analysis.
-         4. Dashboard: The core tool. Filters for Region/Sport. Logic tailored to highlight ALL programs (Baseball, Volleyball, General).
-         5. Footer: Specific credits per user request.
-    -->
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-900 border-b-2 border-bcg-green dark:border-green-600 sticky top-0 z-50 shadow-sm transition-colors">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <div class="w-1.5 h-8 bg-bcg-green dark:bg-green-500 mr-4 group-hover:h-10 transition-all duration-300"></div>
+                <h1 class="text-xl font-serif font-bold tracking-tight text-bcg-dark dark:text-white">
+                    STRATEGY <span class="font-sans font-light text-gray-400">| SPORTS ECON</span>
+                </h1>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- TTS Control -->
+                <button id="tts-btn" class="flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 hover:border-bcg-green dark:hover:border-green-500 bg-white dark:bg-gray-800 text-xs font-bold uppercase tracking-widest transition-all">
+                    <span id="tts-icon" class="mr-2 text-bcg-green dark:text-green-400">▶</span>
+                    <span id="tts-label" class="dark:text-gray-200">AUDIO BRIEF</span>
+                    <span id="tts-indicator" class="hidden speaking-dot"></span>
+                </button>
 
-    <!-- Visualization & Content Choices:
-         1. "Volleyball Market Models" (Bar Chart): Comparing league valuations/structure (PVF vs SV vs TVL).
-         2. "Program Capability Radar" (Radar Chart): Theory vs Practice vs Legal vs Health.
-         3. "Regional Distribution" (Doughnut): Geo-distribution of recommended schools.
-         4. Cards: Bilingual data objects dynamically rendered.
-    -->
-    
-    <!-- CONFIRMATION: NO SVG graphics used (Icons are Unicode/CSS). NO Mermaid JS used. -->
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
 
-    <!-- Navigation -->
-    <nav class="bg-white/90 dark:bg-brand-900/90 backdrop-blur-sm border-b border-brand-200 dark:border-brand-600 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <!-- Logo -->
-                <div class="flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <span class="text-xl md:text-2xl font-bold tracking-tight">
-                        <span class="text-brand-accent dark:text-brand-accentDark">Sport</span>Econ<span class="text-brand-500 dark:text-brand-400">Global</span>
-                    </span>
-                </div>
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 text-gray-400 hover:text-bcg-green dark:hover:text-green-400 transition-colors" title="Toggle Theme">
+                    <span id="theme-icon">☾</span>
+                </button>
 
-                <!-- Controls -->
-                <div class="flex items-center space-x-2 md:space-x-4">
-                    <!-- Nav Links (Desktop) -->
-                    <div class="hidden md:flex space-x-4 mr-4">
-                        <button onclick="scrollToSection('research-insights')" class="text-sm font-medium hover:text-brand-accent dark:hover:text-brand-accentDark" data-i18n="nav_research">研究專題</button>
-                        <button onclick="scrollToSection('dashboard')" class="text-sm font-medium hover:text-brand-accent dark:hover:text-brand-accentDark" data-i18n="nav_analysis">擇校分析</button>
-                    </div>
-
-                    <!-- Theme Toggle -->
-                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-brand-100 dark:hover:bg-brand-800 transition" aria-label="Toggle Theme">
-                        <span id="theme-icon" class="text-lg">🌙</span>
-                    </button>
-
-                    <!-- Lang Toggle -->
-                    <button id="lang-toggle" class="px-3 py-1 text-xs font-bold border border-brand-300 dark:border-brand-600 rounded hover:bg-brand-100 dark:hover:bg-brand-800 transition">
-                        EN / 繁中
-                    </button>
-                </div>
+                <!-- Lang Toggle -->
+                <button id="lang-toggle" class="text-xs font-bold px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-bcg-green dark:hover:bg-green-600 hover:text-white transition-colors border border-transparent">
+                    EN / 繁中
+                </button>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
+    <main class="flex-grow max-w-7xl mx-auto px-6 py-12 w-full">
 
-        <!-- Hero Section -->
-        <section class="text-center max-w-4xl mx-auto pt-8">
-            <h1 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">
-                <span data-i18n="hero_title_1">連結數據與賽場：</span><br>
-                <span class="text-brand-accent dark:text-brand-accentDark" data-i18n="hero_title_2">國際體育經濟與法律深造指南</span>
-            </h1>
-            <p class="text-lg text-brand-600 dark:text-brand-300 mb-8 max-w-3xl mx-auto leading-relaxed" data-i18n="hero_desc">
-                專為具備「國際體育事務」與「經濟系」雙學位背景的學生設計。
-                聚焦美、加、紐澳及亞洲英語學程。針對排球產業發展、高齡化社會經濟與運動法律領域進行深度分析。
-            </p>
-            <div class="flex flex-wrap justify-center gap-3 text-sm">
-                <span class="px-3 py-1 bg-white dark:bg-brand-800 border border-brand-200 dark:border-brand-600 rounded-full shadow-sm">🏐 <span data-i18n="tag_volleyball">排球經濟</span></span>
-                <span class="px-3 py-1 bg-white dark:bg-brand-800 border border-brand-200 dark:border-brand-600 rounded-full shadow-sm">⚾ <span data-i18n="tag_baseball">棒球數據</span></span>
-                <span class="px-3 py-1 bg-white dark:bg-brand-800 border border-brand-200 dark:border-brand-600 rounded-full shadow-sm">⚖️ <span data-i18n="tag_law">法律與合規</span></span>
-                <span class="px-3 py-1 bg-white dark:bg-brand-800 border border-brand-200 dark:border-brand-600 rounded-full shadow-sm">👵 <span data-i18n="tag_silver">銀髮商機</span></span>
-            </div>
-        </section>
-
-        <!-- Research Insights (Volleyball + Silver Economy) -->
-        <section id="research-insights" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Executive Summary -->
+        <section class="mb-14">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-bcg-green dark:text-green-400 mb-3" data-i18n="hero_eyebrow">Executive Report 2026</p>
+            <h2 class="text-4xl md:text-5xl font-serif font-bold mb-8 leading-tight text-gray-900 dark:text-white">
+                <span data-i18n="hero_title_1">From Theory to Industry Leader</span><br>
+                <span class="text-gray-500 dark:text-gray-400 font-sans font-light text-2xl md:text-4xl" data-i18n="hero_title_2">Strategic Pathways in Sports Economics & Law</span>
+            </h2>
             
-            <!-- Insight 1: Volleyball Economics -->
-            <div class="bg-white dark:bg-brand-800 rounded-2xl shadow-sm border-l-8 border-brand-accent overflow-hidden flex flex-col">
-                <div class="p-6 md:p-8 flex-grow">
-                    <h2 class="text-2xl font-bold mb-4 flex items-center text-brand-800 dark:text-brand-100">
-                        🏐 <span class="ml-2" data-i18n="vb_title">排球經濟：全球與台灣視角</span>
-                    </h2>
-                    
-                    <div class="space-y-4">
-                        <div class="bg-brand-50 dark:bg-brand-900 p-4 rounded-lg">
-                            <h3 class="font-bold text-base mb-2 text-brand-700 dark:text-brand-300" data-i18n="vb_global_title">全球趨勢：女子運動經濟的崛起</h3>
-                            <p class="text-sm text-brand-600 dark:text-brand-400 leading-relaxed" data-i18n="vb_global_desc">
-                                排球是極少數女性觀眾與經濟價值常超越男性的項目。美國 Nebraska 大學創下9.2萬人進場紀錄，標誌著「體驗經濟」的爆發。
-                            </p>
-                            <ul class="mt-2 space-y-1 text-sm text-brand-600 dark:text-brand-400">
-                                <li>• <strong>USA:</strong> PVF (城市屬地) vs LOVB (俱樂部連結) 的商業模式競爭。</li>
-                                <li>• <strong>Japan:</strong> SV.League 2024年全面職業化，目標成為世界最高薪聯賽，涉及複雜法律重組。</li>
-                            </ul>
-                        </div>
-
-                        <div class="border border-brand-200 dark:border-brand-700 p-4 rounded-lg">
-                            <h3 class="font-bold text-base mb-2" data-i18n="vb_tw_title">台灣觀點：企業聯賽 (TVL) 的挑戰</h3>
-                            <p class="text-sm text-brand-600 dark:text-brand-400 leading-relaxed" data-i18n="vb_tw_desc">
-                                台灣排球風氣極盛，但職業化處於過渡期。經濟系切入點：分析「半職業轉職業」的邊際效益，以及球員合約(僱傭vs委任)的法律經濟分析。
-                            </p>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-gray-300 dark:border-gray-700 pt-6">
+                <div class="pr-6 border-r border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold text-sm uppercase mb-2 text-gray-900 dark:text-gray-200" data-i18n="tag_elite_head">Elite Academia</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-serif" data-i18n="tag_elite_desc">Chicago, Harvard, Stanford</p>
                 </div>
-                <!-- Chart: League Models -->
-                <div class="bg-brand-50 dark:bg-brand-900 p-4 border-t border-brand-100 dark:border-brand-700">
-                    <h4 class="text-xs font-bold uppercase text-center mb-4 text-brand-500" data-i18n="chart_league_title">聯賽商業模式結構分析</h4>
-                    <div class="chart-container" style="height: 200px;">
-                        <canvas id="volleyballChart"></canvas>
-                    </div>
+                <div class="px-6 border-r border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold text-sm uppercase mb-2 text-gray-900 dark:text-gray-200" data-i18n="tag_vb_head">Market Focus</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-serif" data-i18n="tag_vb_desc">Volleyball Economics</p>
+                </div>
+                <div class="pl-6">
+                    <h3 class="font-bold text-sm uppercase mb-2 text-gray-900 dark:text-gray-200" data-i18n="tag_silver_head">Future Trend</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-serif" data-i18n="tag_silver_desc">Silver Economy Strategy</p>
                 </div>
             </div>
-
-            <!-- Insight 2: Silver Economy & Broad Strategy -->
-            <div class="bg-white dark:bg-brand-800 rounded-2xl shadow-sm border-l-8 border-brand-500 dark:border-brand-400 overflow-hidden flex flex-col">
-                <div class="p-6 md:p-8 flex-grow">
-                    <h2 class="text-2xl font-bold mb-4 flex items-center text-brand-800 dark:text-brand-100">
-                        📈 <span class="ml-2" data-i18n="silver_title">超高齡社會與宏觀策略</span>
-                    </h2>
-                    
-                    <div class="space-y-4">
-                         <div class="bg-brand-50 dark:bg-brand-900 p-4 rounded-lg">
-                            <h3 class="font-bold text-base mb-2 text-brand-700 dark:text-brand-300" data-i18n="silver_econ_title">經濟系學生的切入點</h3>
-                            <p class="text-sm text-brand-600 dark:text-brand-400 leading-relaxed" data-i18n="silver_econ_desc">
-                                台灣即將邁入超高齡社會。體育不再只是競技，而是預防醫學。
-                                <strong>核心課題：</strong>如何透過「運動處方」降低健保支出？如何設計針對銀髮族的健身房商業模式？
-                            </p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="border border-brand-200 dark:border-brand-700 p-3 rounded-lg">
-                                <span class="text-2xl">🧘</span>
-                                <h4 class="font-bold text-sm mt-1" data-i18n="item_yoga">瑜珈與輕運動</h4>
-                                <p class="text-xs mt-1 opacity-75" data-i18n="item_yoga_desc">銀髮族的社交與功能性訓練商機。</p>
-                            </div>
-                            <div class="border border-brand-200 dark:border-brand-700 p-3 rounded-lg">
-                                <span class="text-2xl">⚖️</span>
-                                <h4 class="font-bold text-sm mt-1" data-i18n="item_law">運動法律</h4>
-                                <p class="text-xs mt-1 opacity-75" data-i18n="item_law_desc">高齡運動傷害責任歸屬與保險法規。</p>
-                            </div>
-                            <div class="border border-brand-200 dark:border-brand-700 p-3 rounded-lg">
-                                <span class="text-2xl">⚾</span>
-                                <h4 class="font-bold text-sm mt-1" data-i18n="item_data">棒球數據</h4>
-                                <p class="text-xs mt-1 opacity-75" data-i18n="item_data_desc">薪資仲裁模型與 Moneyball 策略。</p>
-                            </div>
-                            <div class="border border-brand-200 dark:border-brand-700 p-3 rounded-lg">
-                                <span class="text-2xl">🌏</span>
-                                <h4 class="font-bold text-sm mt-1" data-i18n="item_asia">亞洲經驗</h4>
-                                <p class="text-xs mt-1 opacity-75" data-i18n="item_asia_desc">借鏡日本(軟式排球)與韓國的政策。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </section>
 
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="bg-white dark:bg-brand-800 rounded-2xl shadow-sm border border-brand-200 dark:border-brand-700 overflow-hidden">
-            <div class="p-6 border-b border-brand-100 dark:border-brand-700 bg-brand-50 dark:bg-brand-900/50">
-                <h2 class="text-2xl font-bold" data-i18n="dash_title">智慧擇校儀表板</h2>
-                <p class="text-sm text-brand-500 dark:text-brand-400 mt-1" data-i18n="dash_subtitle">篩選適合「經濟+體育」背景的頂尖學程 (美/加/紐澳/亞洲)</p>
+        <!-- Glossary -->
+        <section class="mb-16 bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-gray-700 shadow-sharp">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6 border-b border-gray-100 dark:border-gray-700 pb-2" data-i18n="glossary_section">Core Terminology</h4>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3 border-r border-gray-100 dark:border-gray-700 pr-8">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-bcg-green dark:text-green-400 mb-3" data-i18n="glossary_label">Select Term</label>
+                    <select id="glossary-select" class="w-full bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-300 dark:border-gray-600 focus:border-bcg-green dark:focus:border-green-500 outline-none py-3 font-serif text-sm dark:text-white cursor-pointer transition-colors">
+                        <!-- JS populated -->
+                    </select>
+                </div>
+                <div class="md:w-2/3">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3" data-i18n="glossary_def_label">Definition</label>
+                    <p id="glossary-def" class="text-lg font-serif text-bcg-dark dark:text-gray-200 leading-relaxed min-h-[4rem]">
+                        <!-- JS populated -->
+                    </p>
+                </div>
             </div>
+        </section>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-0">
-                
+        <!-- Strategic Insights (Tabs) -->
+        <section class="mb-16">
+            <div class="flex justify-between items-end border-b border-gray-300 dark:border-gray-600 mb-0">
+                <h3 class="text-xl font-bold font-serif pb-4 text-gray-900 dark:text-white" data-i18n="section_research">Strategic Insights</h3>
+                <div class="flex space-x-1 overflow-x-auto" id="research-tabs-nav">
+                    <!-- JS populated tabs -->
+                </div>
+            </div>
+            
+            <div id="research-content" class="bg-white dark:bg-gray-800 p-8 border border-t-0 border-gray-200 dark:border-gray-700 shadow-sharp">
+                <!-- Content & Chart -->
+            </div>
+        </section>
+
+        <!-- Program Dashboard -->
+        <section id="dashboard">
+            <h3 class="text-xl font-bold font-serif mb-6 pb-4 border-b border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" data-i18n="list_header">Program Directory & Analysis</h3>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <!-- Filters -->
-                <div class="p-6 border-r border-brand-200 dark:border-brand-700 bg-white dark:bg-brand-800">
-                    <h3 class="font-bold mb-4 flex items-center text-sm uppercase tracking-wide text-brand-500 dark:text-brand-400" data-i18n="filter_header">
-                        篩選條件 Filters
-                    </h3>
-
-                    <!-- Region -->
-                    <div class="mb-6">
-                        <label class="block text-xs font-semibold mb-2" data-i18n="filter_region">區域 (Region)</label>
-                        <div class="space-y-2" id="region-filters">
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" value="USA" checked class="form-checkbox text-brand-accent rounded border-gray-300 dark:border-gray-600 dark:bg-brand-700">
-                                <span>USA</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" value="Canada" checked class="form-checkbox text-brand-accent rounded border-gray-300 dark:border-gray-600 dark:bg-brand-700">
-                                <span>Canada</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" value="Oceania" checked class="form-checkbox text-brand-accent rounded border-gray-300 dark:border-gray-600 dark:bg-brand-700">
-                                <span>Oceania (AUS/NZ)</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" value="Asia" checked class="form-checkbox text-brand-accent rounded border-gray-300 dark:border-gray-600 dark:bg-brand-700">
-                                <span>Asia (English Pgm)</span>
-                            </label>
+                <div class="lg:col-span-1">
+                    <div class="bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 sticky top-24 shadow-sharp">
+                        <h4 class="font-bold text-xs uppercase tracking-widest text-gray-400 mb-6" data-i18n="filter_header">Refine View</h4>
+                        <div class="space-y-6">
+                            <div><label class="block text-xs font-bold mb-2 text-bcg-green dark:text-green-400" data-i18n="filter_track">ACADEMIC TRACK</label><select id="track-select" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 p-3 text-sm dark:text-white focus:border-bcg-green outline-none"></select></div>
+                            <div><label class="block text-xs font-bold mb-2 text-bcg-green dark:text-green-400" data-i18n="filter_region">REGION</label><select id="region-select" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 p-3 text-sm dark:text-white focus:border-bcg-green outline-none"></select></div>
+                            <div><label class="block text-xs font-bold mb-2 text-bcg-green dark:text-green-400" data-i18n="filter_sport">SECTOR</label><select id="sport-select" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 p-3 text-sm dark:text-white focus:border-bcg-green outline-none"></select></div>
+                            <button id="reset-btn" class="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-xs font-bold uppercase tracking-widest transition-colors text-gray-800 dark:text-white" data-i18n="btn_reset">Reset</button>
                         </div>
                     </div>
-
-                    <!-- Domain -->
-                    <div class="mb-6">
-                        <label class="block text-xs font-semibold mb-2" data-i18n="filter_domain">學術領域 (Domain)</label>
-                        <select id="domain-select" class="w-full bg-brand-50 dark:bg-brand-900 border border-brand-300 dark:border-brand-600 text-sm rounded-lg p-2.5 dark:text-white">
-                            <option value="all">全部顯示 (All)</option>
-                            <option value="EconData">數據與經濟 (Econ/Data)</option>
-                            <option value="LawPolicy">法律與政策 (Law/Policy)</option>
-                            <option value="HealthSilver">健康與銀髮 (Health/Silver)</option>
-                            <option value="Management">商業管理 (Management)</option>
-                        </select>
-                    </div>
-
-                    <!-- Sport -->
-                    <div class="mb-6">
-                        <label class="block text-xs font-semibold mb-2" data-i18n="filter_sport">專項資源 (Sport Focus)</label>
-                        <select id="sport-select" class="w-full bg-brand-50 dark:bg-brand-900 border border-brand-300 dark:border-brand-600 text-sm rounded-lg p-2.5 dark:text-white">
-                            <option value="all">全部顯示 (All)</option>
-                            <option value="Volleyball">排球 (Volleyball)</option>
-                            <option value="Baseball">棒球 (Baseball)</option>
-                            <option value="Basketball">籃球 (Basketball)</option>
-                            <option value="Outdoor">戶外/耐力 (Endurance)</option>
-                            <option value="Health">瑜珈/健身 (Fitness)</option>
-                        </select>
-                    </div>
-
-                    <button id="reset-btn" class="w-full bg-brand-100 dark:bg-brand-700 hover:bg-brand-200 dark:hover:bg-brand-600 text-brand-800 dark:text-white font-medium py-2 px-4 rounded transition" data-i18n="btn_reset">
-                        Reset Filters
-                    </button>
                 </div>
 
-                <!-- Results -->
-                <div class="lg:col-span-3 p-6 bg-brand-50 dark:bg-brand-900/30">
+                <!-- Main Content -->
+                <div class="lg:col-span-3 space-y-6">
+                    <div class="bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sharp">
+                        <h4 class="text-xs font-bold text-center mb-4 uppercase tracking-widest text-gray-400" data-i18n="chart_radar">Competency Matrix</h4>
+                        <div class="chart-container"><canvas id="radarChart"></canvas></div>
+                    </div>
                     
-                    <!-- Charts Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-white dark:bg-brand-800 p-4 rounded-xl shadow-sm border border-brand-100 dark:border-brand-700">
-                             <h4 class="text-xs font-bold uppercase text-center mb-2 text-brand-500" data-i18n="chart_radar_title">學程核心能力分析</h4>
-                            <div class="chart-container">
-                                <canvas id="radarChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="bg-white dark:bg-brand-800 p-4 rounded-xl shadow-sm border border-brand-100 dark:border-brand-700">
-                             <h4 class="text-xs font-bold uppercase text-center mb-2 text-brand-500" data-i18n="chart_region_title">區域分佈</h4>
-                            <div class="chart-container">
-                                <canvas id="regionChart"></canvas>
-                            </div>
-                        </div>
+                    <div class="bg-bcg-green dark:bg-green-700 text-white px-5 py-3 text-xs font-bold uppercase tracking-widest flex justify-between items-center shadow-sharp">
+                        <span data-i18n="list_count_label">Programs Identified</span>
+                        <span id="count-display" class="text-lg font-serif">0</span>
                     </div>
 
-                    <!-- List Header -->
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg" data-i18n="list_header">推薦學校列表</h3>
-                        <span class="text-xs bg-brand-200 dark:bg-brand-700 text-brand-800 dark:text-brand-200 px-2 py-1 rounded"><span id="count-display">0</span> Programs Found</span>
-                    </div>
-
-                    <!-- Cards Grid -->
-                    <div id="uni-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4">
-                        <!-- JS Injection -->
-                    </div>
-
+                    <div id="uni-list" class="space-y-4"></div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-brand-900 border-t border-brand-200 dark:border-brand-700 mt-8 py-8 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
-            <div class="text-brand-500 dark:text-brand-400 mb-4 md:mb-0">
-                <span id="date-display"></span> | © All Rights Reserved
+    <footer class="bg-bcg-dark dark:bg-black text-white py-8 px-6 mt-12 border-t-4 border-bcg-green">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+            <div>
+                <h4 class="font-serif font-bold text-lg mb-2 text-bcg-green dark:text-green-400">GLOBAL STRATEGY</h4>
+                <p class="opacity-60 leading-relaxed">Providing elite educational pathways for the next generation of sports economists and legal experts.</p>
             </div>
-            <div class="text-brand-500 dark:text-brand-400">
-                Creative Editor: <a href="https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo" target="_blank" class="text-brand-accent hover:text-brand-accentHover font-medium underline decoration-brand-accent/50 hover:decoration-brand-accent">Prof. Shihmin Lo</a>
+            <div class="text-right">
+                <p class="opacity-40 uppercase tracking-widest mb-1">Creative Editor</p>
+                <a href="https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo" target="_blank" class="hover:text-bcg-green dark:hover:text-green-400 transition-colors font-bold text-base">Prof. Shihmin Lo</a>
+                <p class="mt-2 opacity-40 text-xs font-mono">&copy; 2026. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
     <!-- LOGIC -->
     <script>
-        // --- 1. DATA CONTENT (Bilingual) ---
-        // Complete dataset incorporating Original Research + New Volleyball Data
+        const state = { lang: 'en', theme: 'light', activeTab: 'elite', filters: { track: 'all', region: 'all', sport: 'all' }, expandedCard: null, selectedTerm: 'antitrust' };
 
         const dictionary = {
-            zh: {
-                nav_research: "研究專題", nav_analysis: "擇校分析",
-                hero_title_1: "連結數據與賽場：", hero_title_2: "國際體育經濟與法律深造指南",
-                hero_desc: "專為具備「國際體育事務」與「經濟系」雙學位背景的學生設計。聚焦美、加、紐澳及亞洲英語學程。針對排球產業發展、高齡化社會經濟與運動法律領域進行深度分析。",
-                tag_volleyball: "排球經濟", tag_baseball: "棒球數據", tag_law: "法律與合規", tag_silver: "銀髮商機",
-                
-                vb_title: "排球經濟：全球與台灣視角",
-                vb_global_title: "全球趨勢：女子運動經濟的崛起", vb_global_desc: "排球是極少數女性觀眾與經濟價值常超越男性的運動項目。美國 Nebraska 大學創下9.2萬人進場紀錄，標誌著「體驗經濟」在排球產業的爆發。",
-                vb_tw_title: "台灣觀點：企業聯賽 (TVL) 的挑戰", vb_tw_desc: "台灣排球風氣極盛，但職業化仍處於過渡期。經濟系切入點：分析「半職業轉職業」的邊際效益，以及球員合約以保障雙方權益。",
-                chart_league_title: "聯賽商業模式結構分析 (成熟度 vs 自由度)",
-                
-                silver_title: "超高齡社會與宏觀策略",
-                silver_econ_title: "經濟系學生的切入點", silver_econ_desc: "台灣即將邁入超高齡社會。體育不再只是競技，而是預防醫學。核心課題：如何透過「運動處方」降低健保支出？如何設計針對銀髮族的健身房商業模式？",
-                item_yoga: "瑜珈與輕運動", item_yoga_desc: "銀髮族的社交與功能性訓練商機。",
-                item_law: "運動法律", item_law_desc: "高齡運動傷害責任歸屬與保險法規。",
-                item_data: "棒球數據", item_data_desc: "薪資仲裁模型與 Moneyball 策略。",
-                item_asia: "亞洲經驗", item_asia_desc: "借鏡日本(軟式排球)與韓國的政策。",
-
-                dash_title: "智慧擇校儀表板", dash_subtitle: "篩選適合「經濟+體育」背景的頂尖學程 (美/加/紐澳/亞洲)",
-                filter_header: "篩選條件", filter_region: "區域", filter_domain: "學術領域", filter_sport: "專項資源",
-                btn_reset: "重置條件", list_header: "推薦學校列表",
-                chart_radar_title: "學程核心能力分析", chart_region_title: "區域分佈"
-            },
             en: {
-                nav_research: "Insights", nav_analysis: "Program Finder",
-                hero_title_1: "Data Meets the Court:", hero_title_2: "Int'l Sports Economics & Law Guide",
-                hero_desc: "Designed for Dual Major students (Sports Affairs & Economics). Focusing on USA, Canada, Oceania, and Asia English programs. Deep dive into Volleyball Economics, Silver Economy, and Sports Law.",
-                tag_volleyball: "Volleyball Econ", tag_baseball: "Baseball Data", tag_law: "Sports Law", tag_silver: "Silver Economy",
-                
-                vb_title: "Volleyball Economics: Global vs. Taiwan",
-                vb_global_title: "Global Trend: The Rise of Women's Sports", vb_global_desc: "Volleyball is unique where women's leagues often outperform men's financially. The 92k attendance record at Nebraska signals an explosion in the 'Experience Economy'.",
-                vb_tw_title: "Taiwan Context: TVL Challenges", vb_tw_desc: "Volleyball is huge in Taiwan, but the pro-league is transitional. Research Angle: Marginal benefits of 'Semi-Pro to Pro' transition and player contract laws.",
-                chart_league_title: "League Business Models (Maturity vs Freedom)",
-                
-                silver_title: "Silver Economy Strategy",
-                silver_econ_title: "The Economics Angle", silver_econ_desc: "Taiwan is entering a Super-Aged society. Sports is now Preventive Medicine. Key: Reducing national health insurance costs through exercise prescriptions.",
-                item_yoga: "Yoga & Wellness", item_yoga_desc: "Functional training markets for the elderly.",
-                item_law: "Sports Law", item_law_desc: "Liability and insurance laws for elderly participants.",
-                item_data: "Baseball Data", item_data_desc: "Salary arbitration models & Moneyball.",
-                item_asia: "Asian Context", item_asia_desc: "Learning from Japan (Soft Volleyball) & Korea.",
+                hero_eyebrow: "Strategic Education Report 2026", hero_title_1: "From Theory to Industry Leader", hero_title_2: "Global Sports Economics & Law Pathways",
+                hero_desc: "A strategic framework connecting Elite Academia with high-growth sectors.",
+                tag_elite_head: "Elite Academia", tag_elite_desc: "Chicago, Harvard, Stanford", tag_vb_head: "Market Focus", tag_vb_desc: "Volleyball Economics", tag_silver_head: "Future Trend", tag_silver_desc: "Silver Economy Strategy",
+                glossary_section: "Core Terminology", glossary_label: "Select Term", glossary_def_label: "Definition", glossary_default: "Select a term.",
+                filter_header: "Refine View", filter_track: "Academic Track", filter_region: "Geographic Region", filter_sport: "Sector Specialization",
+                chart_radar: "Aggregate Competency Profile", chart_vb: "Market Analysis: League Models", chart_elite: "Curriculum Focus", chart_silver: "Healthcare Savings Projection", chart_law: "Legal Practice Areas",
+                list_header: "Program Directory & Analysis", list_count_label: "Programs Identified", section_research: "Strategic Insights",
+                tab_elite: "Elite Academic", tab_vb: "Volleyball Sector", tab_silver: "Silver Economy", tab_law: "Sports Law",
+                btn_reset: "Reset Filters", lbl_tuition: "Investment", lbl_duration: "Duration", lbl_courses: "Curriculum", lbl_alumni: "Network", lbl_career: "Career", lbl_web: "Portal",
+                tts_listen: "AUDIO BRIEF", tts_pause: "STOP AUDIO", tts_resume: "RESUME",
+                sport_all: "All Sectors", sport_vb: "Volleyball", sport_bb: "Baseball", sport_bkb: "Basketball", sport_bad: "Badminton", sport_tt: "Table Tennis", sport_mara: "Marathon", sport_cyc: "Cycling", sport_yoga: "Yoga/Fitness",
+                track_all: "All Tracks", track_elite: "Elite Academic (PhD)", track_applied: "Applied Industry (Master)",
+                region_all: "Global", region_usa: "USA", region_can: "Canada", region_oce: "Oceania", region_asia: "Asia"
+            },
+            zh: {
+                hero_eyebrow: "2026 策略教育報告", hero_title_1: "從理論巔峰到產業前沿", hero_title_2: "全球體育經濟與法律深造策略",
+                hero_desc: "連結菁英學術殿堂與高成長產業領域的策略架構。",
+                tag_elite_head: "頂尖學術", tag_elite_desc: "常春藤盟校、芝加哥大學", tag_vb_head: "市場聚焦", tag_vb_desc: "排球經濟學", tag_silver_head: "未來趨勢", tag_silver_desc: "銀髮經濟策略",
+                glossary_section: "核心術語庫", glossary_label: "選擇術語", glossary_def_label: "定義與背景", glossary_default: "請選擇術語查看定義。",
+                filter_header: "篩選條件", filter_track: "學術路徑", filter_region: "地理區域", filter_sport: "產業專項",
+                chart_radar: "核心能力矩陣", chart_vb: "市場分析：聯賽模型", chart_elite: "課程比重分析", chart_silver: "醫療節省預估", chart_law: "法律實務領域",
+                list_header: "學程名錄與分析", list_count_label: "符合條件", section_research: "策略洞察",
+                tab_elite: "菁英學術路徑", tab_vb: "排球產業專題", tab_silver: "銀髮經濟趨勢", tab_law: "運動法律與合規",
+                btn_reset: "重置篩選", lbl_tuition: "預估投資", lbl_duration: "修業年限", lbl_courses: "核心課程", lbl_alumni: "校友網絡", lbl_career: "職涯路徑", lbl_web: "官方網站",
+                tts_listen: "朗讀洞察", tts_pause: "停止朗讀", tts_resume: "繼續朗讀",
+                sport_all: "所有產業", sport_vb: "排球", sport_bb: "棒球", sport_bkb: "籃球", sport_bad: "羽球", sport_tt: "桌球", sport_mara: "馬拉松", sport_cyc: "自行車", sport_yoga: "瑜珈/健身",
+                track_all: "所有路徑", track_elite: "菁英學術 (PhD導向)", track_applied: "產業實務 (Master導向)",
+                region_all: "全球", region_usa: "美國", region_can: "加拿大", region_oce: "紐澳", region_asia: "亞洲"
+            }
+        };
 
-                dash_title: "Smart Program Dashboard", dash_subtitle: "Filter top programs tailored to Econ + Sports background",
-                filter_header: "Filters", filter_region: "Region", filter_domain: "Domain", filter_sport: "Sport Focus",
-                btn_reset: "Reset Filters", list_header: "Recommended Programs",
-                chart_radar_title: "Program Capability Analysis", chart_region_title: "Regional Distribution"
+        const glossaryData = [
+            { id: 'antitrust', term_en: 'Antitrust Law', term_zh: '反托拉斯法', def_en: "Legal framework promoting competition. Key in challenging league monopolies (e.g., NCAA NIL, Super League).", def_zh: "促進市場競爭的法律架構。常用於挑戰職業聯盟的壟斷地位（如 NCAA 的 NIL 案件）。" },
+            { id: 'moneyball', term_en: 'Sabermetrics', term_zh: '賽伯計量學 (Moneyball)', def_en: "Statistical analysis to identify undervalued assets in player markets.", def_zh: "利用統計分析在球員市場中尋找被低估的資產，是經濟系學生的核心優勢。" },
+            { id: 'cba', term_en: 'CBA', term_zh: '勞資協議', def_en: "Collective Bargaining Agreement determining salary caps and revenue sharing.", def_zh: "決定薪資上限與收益分享機制的勞資雙方協議。" },
+            { id: 'silver', term_en: 'Silver Economy', term_zh: '銀髮經濟', def_en: "Economic activities driven by the needs of people aged 50+. Includes wellness and soft sports.", def_zh: "由50歲以上人口需求驅動的經濟活動。包含健康促進與軟式運動產業。" },
+            { id: 'posting', term_en: 'Posting System', term_zh: '入札制度', def_en: "Transfer system between MLB and NPB/KBO allowing players to sign with US teams.", def_zh: "連接美日韓職棒的球員轉隊制度，涉及龐大的轉隊費與國際合約談判。" },
+            { id: 'arbitration', term_en: 'Salary Arbitration', term_zh: '薪資仲裁', def_en: "A legal process to resolve salary disputes between players and teams using final-offer arbitration.", def_zh: "解決球員與球隊薪資爭議的法律程序，通常採用「最終報價仲裁」模式。" },
+            { id: 'nil', term_en: 'NIL', term_zh: '姓名形象權', def_en: "Name, Image, and Likeness rights allowing college athletes to monetize their personal brand.", def_zh: "允許大學運動員將個人品牌變現的權利，徹底改變了 NCAA 的經濟生態。" },
+            { id: 'titleix', term_en: 'Title IX', term_zh: '教育修正案第九條', def_en: "Federal law prohibiting sex discrimination in education, driving the growth of women's sports (Volleyball).", def_zh: "禁止教育性別歧視的聯邦法律，是推動女子排球與大學女子運動發展的基石。" },
+            { id: 'revenue', term_en: 'Revenue Sharing', term_zh: '收益分享', def_en: "Distribution of league revenues (TV, Merch) among teams to ensure competitive balance.", def_zh: "聯盟將電視轉播與商品收入分配給各隊的機制，旨在維持競爭平衡。" },
+            { id: 'franchise', term_en: 'Franchise Model', term_zh: '特許經營', def_en: "Closed league system with no relegation, maximizing asset value for owners.", def_zh: "無升降級的封閉式聯盟體制，能最大化球團擁有者的資產價值。" }
+        ];
+
+        const researchData = {
+            elite: {
+                title_en: "The Elite Academic Track: Economics & Law", title_zh: "菁英學術路徑：經濟與法律",
+                content_en: "Focus on Rule-Making. Use UChicago's Price Theory for ticket markets, or Harvard Law's frameworks for contracts. Pathway to IOC/FIFA governance.",
+                content_zh: "專注於規則制定。利用芝加哥大學價格理論分析票務，或哈佛法律架構處理合約。通往 IOC/FIFA 決策層之路。",
+                chartId: "chart_elite"
+            },
+            vb: {
+                title_en: "Volleyball Economics: Global vs Local", title_zh: "排球經濟專題：全球與在地",
+                content_en: "Comparative Analysis: US Franchise models (PVF) vs Club Linkage (LOVB) vs Japan's Professionalization (SV.League). Key metric: Fan engagement ROI.",
+                content_zh: "比較分析：美國特許經營 (PVF) vs 俱樂部連結 (LOVB) vs 日本職業化 (SV.League)。關鍵指標：粉絲互動投報率。",
+                chartId: "chart_vb"
+            },
+            silver: {
+                title_en: "Silver Economy & Health Policy", title_zh: "銀髮經濟與健康政策",
+                content_en: "Preventive Medicine Strategy. Cost-Benefit Analysis of 'Exercise Prescriptions' on National Health Insurance. Japan offers the benchmark policy.",
+                content_zh: "預防醫學策略。「運動處方」對健保支出的成本效益分析。日本提供了標竿政策。",
+                chartId: "chart_silver"
+            },
+            law: {
+                title_en: "Sports Law & Compliance", title_zh: "運動法律與合規",
+                content_en: "Critical Issues: Employee status classification, liability waivers for elderly participants, and IP rights in digital media.",
+                content_zh: "關鍵議題：僱傭身分認定、高齡參與者免責條款，以及數位媒體中的智財權。",
+                chartId: "chart_law"
             }
         };
 
         const universities = [
-            {
-                id: 1,
-                name_en: "University of Nebraska-Lincoln (UNL)",
-                name_zh: "內布拉斯加大學林肯分校 (UNL)",
-                region: "USA",
-                program: "MA in Business (Intercollegiate Athletics Admin)",
-                focus: ["EconData", "Management"],
-                sports: ["Volleyball"],
-                scores: { theory: 8, practice: 10, legal: 5, health: 6 },
-                desc_zh: "【排球首選】美國女排聖地(Huskers)。擁有世界最高排球票房與粉絲經濟，非常適合研究「職業賽事行銷」與「地方經濟影響」。",
-                desc_en: "[Top for Volleyball] The Mecca of US Volleyball. Holds attendance records. Perfect for researching 'Fan Economics' and regional economic impact."
-            },
-            {
-                id: 2,
-                name_en: "Rice University",
-                name_zh: "萊斯大學 (Rice)",
-                region: "USA",
-                program: "Sport Analytics",
-                focus: ["EconData"],
-                sports: ["Baseball", "Basketball"],
-                scores: { theory: 10, practice: 6, legal: 4, health: 5 },
-                desc_zh: "【經濟系首選】德州學術重鎮。其運動分析課程強調高階統計與經濟建模 (Moneyball style)，適合經濟系背景鑽研數據。",
-                desc_en: "[Top for Econ] Academic powerhouse in Texas. Focuses on advanced statistics and economic modeling. Perfect for Econ majors."
-            },
-            {
-                id: 3,
-                name_en: "University of Florida",
-                name_zh: "佛羅里達大學 (UF)",
-                region: "USA",
-                program: "Sport Management (MS/PhD)",
-                focus: ["Management", "HealthSilver", "Volleyball", "LawPolicy"],
-                sports: ["Volleyball", "Baseball", "Health"],
-                scores: { theory: 8, practice: 8, legal: 8, health: 9 },
-                desc_zh: "【綜合首選】佛州是退休天堂也是排球強權。擁有頂尖法學院與運動管理，適合研究高齡運動市場與法律的結合。",
-                desc_en: "[Comprehensive] Florida is a retirement hub and volleyball powerhouse. Great for connecting elderly wellness markets with sports law."
-            },
-            {
-                id: 4,
-                name_en: "University of Tsukuba",
-                name_zh: "筑波大學",
-                region: "Asia",
-                program: "TIAS (Tsukuba Int'l Academy for Sport Studies)",
-                focus: ["Management", "HealthSilver", "EconData"],
-                sports: ["Volleyball", "Health"],
-                scores: { theory: 9, practice: 8, legal: 5, health: 9 },
-                desc_zh: "【亞洲科研】日本排球科研最強校，全英文學程。適合研究日本 SV.League 改革、氣排球(Soft Volleyball)對高齡社會的貢獻。",
-                desc_en: "[Asia Research] Japan's top sports science hub. English program. Ideal for studying SV.League reforms and Soft Volleyball for the elderly."
-            },
-            {
-                id: 5,
-                name_en: "University of Oregon",
-                name_zh: "奧勒岡大學 (UO)",
-                region: "USA",
-                program: "Warsaw Sports Marketing Center (MBA)",
-                focus: ["Management", "EconData"],
-                sports: ["Outdoor", "Basketball"],
-                scores: { theory: 7, practice: 10, legal: 5, health: 6 },
-                desc_zh: "【產業實務】Nike 總部所在地。適合想結合「行銷數據」與「經濟分析」的學生。全美頂尖的產學連結。",
-                desc_en: "[Industry] Located near Nike HQ. Top choice for combining Marketing Data with Economic Analysis. Industry links are unmatched."
-            },
-            {
-                id: 6,
-                name_en: "Waseda University",
-                name_zh: "早稻田大學",
-                region: "Asia",
-                program: "Sport Sciences (English Program)",
-                focus: ["Management", "HealthSilver", "EconData"],
-                sports: ["Baseball", "Volleyball", "Health"],
-                scores: { theory: 9, practice: 8, legal: 6, health: 9 },
-                desc_zh: "【亞洲政策】日本私校之首。日本是超高齡社會前輩，其「社區運動政策」與棒球/排球職業化歷程極具參考價值。",
-                desc_en: "[Asia Policy] Top private uni in Japan. A pioneer in 'Super-Aged' society policies. Great for studying community sports and pro-leagues."
-            },
-            {
-                id: 7,
-                name_en: "Deakin University",
-                name_zh: "迪肯大學",
-                region: "Oceania",
-                program: "Master of Business (Sport Management)",
-                focus: ["Management", "EconData"],
-                sports: ["Outdoor", "Basketball", "Health"],
-                scores: { theory: 8, practice: 10, legal: 6, health: 8 },
-                desc_zh: "【全球管理No.1】位於墨爾本。課程實務極強，澳洲極度重視女性運動與社區體育發展，適合商業模式研究。",
-                desc_en: "[#1 Global Ranking] Located in Melbourne. Highly practical, focusing on women in sport and community development business models."
-            },
-            {
-                id: 8,
-                name_en: "UBC (Univ. of British Columbia)",
-                name_zh: "不列顛哥倫比亞大學 (UBC)",
-                region: "Canada",
-                program: "Kinesiology (MA/MSc/PhD)",
-                focus: ["HealthSilver", "Management"],
-                sports: ["Outdoor", "Health", "Volleyball"], 
-                scores: { theory: 9, practice: 7, legal: 5, health: 10 },
-                desc_zh: "【社會政策】加拿大西岸名校。其研究高度關注「社會文化」與「健康老化」，適合從社會經濟角度切入。",
-                desc_en: "[Social Policy] Top Canadian uni. Research focuses on socio-cultural aspects and healthy aging. Good for socio-economic analysis."
-            },
-            {
-                id: 9,
-                name_en: "Indiana University Bloomington",
-                name_zh: "印第安納大學 (IU)",
-                region: "USA",
-                program: "Sport Management / Public Health",
-                focus: ["Management", "LawPolicy"],
-                sports: ["Basketball", "Health"],
-                scores: { theory: 7, practice: 8, legal: 9, health: 7 },
-                desc_zh: "【法律與公衛】擁有強大的法學院與公共衛生學院。適合想走「運動法律+公衛政策」跨領域路線的學生。",
-                desc_en: "[Law & Public Health] Strong Law and Public Health schools. Ideal for an interdisciplinary path combining Sports Law and Health Policy."
-            },
-             {
-                id: 10,
-                name_en: "University of Queensland",
-                name_zh: "昆士蘭大學 (UQ)",
-                region: "Oceania",
-                program: "Human Movement and Nutrition Sciences",
-                focus: ["HealthSilver", "LawPolicy"],
-                sports: ["Outdoor", "Health", "Racket"],
-                scores: { theory: 9, practice: 7, legal: 7, health: 10 },
-                desc_zh: "【奧運遺產】2032 奧運主辦地。其研究在運動醫學、法律與倫理方面領先，非常適合研究大型賽事對城市的經濟影響。",
-                desc_en: "[Olympics Legacy] Host of 2032 Olympics. Leading research in sports medicine, law, and ethics. Great for event impact studies."
-            }
+            { id: 1, name_en: "University of Chicago", name_zh: "芝加哥大學", region: "USA", track: "Elite", sports: ["Baseball", "Marathon"], tuition: "$65k/yr", duration: "1-2 Yr", courses_en: "Price Theory, Antitrust", courses_zh: "價格理論, 反托拉斯", alumni_en: "Gary Becker (Nobel)", alumni_zh: "Gary Becker (諾貝爾獎)", career_en: "Econ Consulting", career_zh: "經濟諮詢", web: "https://economics.uchicago.edu/", scores: {theory:10, practice:4, legal:10, health:5} },
+            { id: 2, name_en: "Harvard University", name_zh: "哈佛大學", region: "USA", track: "Elite", sports: ["Basketball", "Baseball"], tuition: "$70k/yr", duration: "1-2 Yr", courses_en: "Sports Law Clinic, Negotiation", courses_zh: "運動法律診所, 談判", alumni_en: "League Commissioners", alumni_zh: "聯盟總裁", career_en: "League Counsel", career_zh: "聯盟法務", web: "https://hls.harvard.edu/", scores: {theory:9, practice:7, legal:10, health:6} },
+            { id: 3, name_en: "Stanford University", name_zh: "史丹佛大學", region: "USA", track: "Elite", sports: ["Cycling", "Yoga"], tuition: "$68k/yr", duration: "2 Yr", courses_en: "Sports Econ, Innovation", courses_zh: "體育經濟, 創新", alumni_en: "Roger Noll", alumni_zh: "Roger Noll", career_en: "Sports Tech VC", career_zh: "運動科技創投", web: "https://siepr.stanford.edu/", scores: {theory:10, practice:6, legal:9, health:8} },
+            { id: 13, name_en: "Syracuse University", name_zh: "雪城大學", region: "USA", track: "Applied", sports: ["Basketball", "Baseball"], tuition: "$58k/yr", duration: "1-2 Yr", courses_en: "Sport Analytics, Media Rights", courses_zh: "運動分析, 媒體權利", alumni_en: "David Falk", alumni_zh: "David Falk", career_en: "Rights Manager", career_zh: "版權經理", web: "https://falk.syr.edu/", scores: {theory:8, practice:9, legal:7, health:4} },
+            { id: 4, name_en: "Univ. of Nebraska-Lincoln", name_zh: "內布拉斯加大學林肯分校", region: "USA", track: "Applied", sports: ["Volleyball"], tuition: "$35k/yr", duration: "1.5 Yr", courses_en: "Fan Engagement, Event Mgmt", courses_zh: "粉絲互動, 賽事管理", alumni_en: "NCAA Directors", alumni_zh: "NCAA 總監", career_en: "Volleyball Ops", career_zh: "排球營運", web: "https://business.unl.edu/", scores: {theory:7, practice:10, legal:5, health:5} },
+            { id: 5, name_en: "Rice University", name_zh: "萊斯大學", region: "USA", track: "Applied", sports: ["Baseball"], tuition: "$55k/yr", duration: "1-2 Yr", courses_en: "Econometrics, Moneyball", courses_zh: "計量經濟, 魔球", alumni_en: "MLB Analytics Heads", alumni_zh: "MLB 數據主管", career_en: "Data Analyst", career_zh: "數據分析師", web: "https://sport.rice.edu/", scores: {theory:9, practice:8, legal:4, health:4} },
+            { id: 6, name_en: "University of Florida", name_zh: "佛羅里達大學", region: "USA", track: "Applied", sports: ["Volleyball", "Fitness"], tuition: "$40k/yr", duration: "2 Yr", courses_en: "Sport Law, Human Performance", courses_zh: "運動法律, 人類表現", alumni_en: "SEC Execs", alumni_zh: "SEC 高管", career_en: "Wellness Director", career_zh: "健康總監", web: "https://hhp.ufl.edu/", scores: {theory:8, practice:8, legal:8, health:9} },
+            { id: 7, name_en: "University of Oregon", name_zh: "奧勒岡大學", region: "USA", track: "Applied", sports: ["Marathon"], tuition: "$60k/yr", duration: "2 Yr", courses_en: "Sponsorship, Brand Strategy", courses_zh: "贊助, 品牌策略", alumni_en: "Nike VPs", alumni_zh: "Nike 副總裁", career_en: "Brand Manager", career_zh: "品牌經理", web: "https://business.uoregon.edu/", scores: {theory:7, practice:10, legal:6, health:6} },
+            { id: 14, name_en: "NUS Singapore", name_zh: "新加坡國立大學", region: "Asia", track: "Applied", sports: ["Badminton", "TableTennis"], tuition: "$45k/yr", duration: "1-2 Yr", courses_en: "Public Policy, Smart Nation", courses_zh: "公共政策, 智慧國家", alumni_en: "Gov Ministers", alumni_zh: "政府部長", career_en: "Policy Advisor", career_zh: "政策顧問", web: "https://lkyspp.nus.edu.sg/", scores: {theory:9, practice:7, legal:6, health:7} },
+            { id: 8, name_en: "Waseda University", name_zh: "早稻田大學", region: "Asia", track: "Applied", sports: ["Baseball", "Volleyball"], tuition: "¥1.5M/yr", duration: "2 Yr", courses_en: "Sport Policy, Aging Society", courses_zh: "體育政策, 高齡社會", alumni_en: "J-League Execs", alumni_zh: "J-League 高層", career_en: "Policy Maker", career_zh: "政策制定", web: "https://www.waseda.jp/", scores: {theory:8, practice:9, legal:6, health:9} },
+            { id: 9, name_en: "University of Tsukuba", name_zh: "筑波大學", region: "Asia", track: "Applied", sports: ["Volleyball", "Yoga"], tuition: "¥535k/yr", duration: "2 Yr", courses_en: "Biomechanics, Coaching", courses_zh: "生物力學, 教練學", alumni_en: "Olympic Medalists", alumni_zh: "奧運獎牌得主", career_en: "Researcher", career_zh: "研究員", web: "http://tias.tsukuba.ac.jp/", scores: {theory:8, practice:8, legal:5, health:10} },
+            { id: 10, name_en: "Seoul National Univ.", name_zh: "首爾大學", region: "Asia", track: "Applied", sports: ["Badminton"], tuition: "Scholarship", duration: "1.5 Yr", courses_en: "Sport Dev, Governance", courses_zh: "運動發展, 治理", alumni_en: "Global Admins", alumni_zh: "全球行政人員", career_en: "Int'l Fed Staff", career_zh: "國際總會職員", web: "http://dtm.snu.ac.kr/", scores: {theory:9, practice:7, legal:7, health:6} },
+            { id: 15, name_en: "University of Sydney", name_zh: "雪梨大學", region: "Oceania", track: "Applied", sports: ["Marathon", "Rugby"], tuition: "$50k/yr", duration: "1.5 Yr", courses_en: "Strategic Mgmt, Big Data", courses_zh: "策略管理, 大數據", alumni_en: "AOC Staff", alumni_zh: "澳洲奧委會職員", career_en: "Consultant", career_zh: "顧問", web: "https://www.sydney.edu.au/", scores: {theory:9, practice:8, legal:6, health:8} },
+            { id: 11, name_en: "Univ. of Queensland", name_zh: "昆士蘭大學", region: "Oceania", track: "Applied", sports: ["Cycling", "Yoga"], tuition: "$45k/yr", duration: "1.5 Yr", courses_en: "Health Econ, Policy", courses_zh: "健康經濟, 政策", alumni_en: "2032 Comm Staff", alumni_zh: "2032 籌委會", career_en: "Impact Analyst", career_zh: "影響分析師", web: "https://hmns.uq.edu.au/", scores: {theory:9, practice:7, legal:6, health:10} },
+            { id: 12, name_en: "Deakin University", name_zh: "迪肯大學", region: "Oceania", track: "Applied", sports: ["Basketball"], tuition: "$42k/yr", duration: "2 Yr", courses_en: "Sport Marketing, Law", courses_zh: "運動行銷, 法律", alumni_en: "Tennis Aus Execs", alumni_zh: "澳網高層", career_en: "Event Director", career_zh: "賽事總監", web: "https://www.deakin.edu.au/", scores: {theory:7, practice:10, legal:6, health:8} }
         ];
 
-        // --- 2. STATE MANAGEMENT ---
-        let state = {
-            lang: 'zh', // Default to Traditional Chinese
-            theme: 'light', // Default Light
-            regions: ['USA', 'Canada', 'Oceania', 'Asia'],
-            domain: 'all',
-            sport: 'all'
-        };
+        let activeChart = null, radarChart = null, ttsUtterance = null;
 
-        // --- 3. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Set Date
-            const today = new Date();
-            const dateStr = today.getFullYear() + '.' + (today.getMonth()+1).toString().padStart(2,'0') + '.' + today.getDate().toString().padStart(2,'0');
-            document.getElementById('date-display').textContent = `v2.2 (${dateStr})`;
-
-            initSettings();
-            initFilters();
-            renderAll();
+            initApp();
+            // Force load voices
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
         });
 
-        // --- 4. SETTINGS & UI LOGIC ---
+        function initApp() {
+            initSettings();
+            initGlossary();
+            populateSelects();
+            renderResearchTabs();
+            renderDashboard();
+            updateText();
+        }
+
         function initSettings() {
-            // Theme
-            const themeToggle = document.getElementById('theme-toggle');
-            themeToggle.addEventListener('click', () => {
-                state.theme = state.theme === 'light' ? 'dark' : 'light';
-                applyTheme();
-            });
-
-            // Lang
-            const langToggle = document.getElementById('lang-toggle');
-            langToggle.addEventListener('click', () => {
-                state.lang = state.lang === 'zh' ? 'en' : 'zh';
-                applyLang();
-                renderAll(); // Re-render charts and cards for text update
-            });
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            document.getElementById('lang-toggle').addEventListener('click', toggleLang);
+            document.getElementById('tts-btn').addEventListener('click', toggleTTS);
+            document.getElementById('reset-btn').addEventListener('click', resetFilters);
+            ['track', 'region', 'sport'].forEach(id => document.getElementById(`${id}-select`).addEventListener('change', e => { state.filters[id] = e.target.value; renderDashboard(); }));
         }
 
-        function applyTheme() {
+        function toggleTheme() {
             const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            if (state.theme === 'dark') {
-                html.classList.add('dark');
-                icon.textContent = '☀️';
-            } else {
+            if(html.classList.contains('dark')) {
                 html.classList.remove('dark');
-                icon.textContent = '🌙';
+                state.theme = 'light';
+                document.getElementById('theme-icon').textContent = '☾';
+            } else {
+                html.classList.add('dark');
+                state.theme = 'dark';
+                document.getElementById('theme-icon').textContent = '☀';
             }
-            renderCharts(); // Re-render charts for color updates
-            renderVolleyballChart();
+            renderResearchChart();
+            renderRadar(filterUniversities());
         }
 
-        function applyLang() {
+        function toggleLang() {
+            state.lang = state.lang === 'en' ? 'zh' : 'en';
+            stopTTS();
+            updateText();
+            initGlossary(); // Re-render glossary to update language
+            populateSelects();
+            renderResearchTabs();
+            renderDashboard();
+        }
+
+        function updateText() {
+            const dict = dictionary[state.lang];
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (dictionary[state.lang][key]) {
-                    el.textContent = dictionary[state.lang][key];
-                }
+                if(dict[key]) el.textContent = dict[key];
             });
+            updateTTSButton(false);
         }
 
-        // --- 5. FILTER LOGIC ---
-        function initFilters() {
-            const regionChecks = document.querySelectorAll('#region-filters input');
-            regionChecks.forEach(input => {
-                input.addEventListener('change', () => {
-                    state.regions = Array.from(regionChecks).filter(cb => cb.checked).map(cb => cb.value);
-                    renderAll();
-                });
-            });
-
-            document.getElementById('domain-select').addEventListener('change', (e) => {
-                state.domain = e.target.value;
-                renderAll();
-            });
-
-            document.getElementById('sport-select').addEventListener('change', (e) => {
-                state.sport = e.target.value;
-                renderAll();
-            });
-
-            document.getElementById('reset-btn').addEventListener('click', () => {
-                document.querySelectorAll('#region-filters input').forEach(cb => cb.checked = true);
-                document.getElementById('domain-select').value = 'all';
-                document.getElementById('sport-select').value = 'all';
-                state.regions = ['USA', 'Canada', 'Oceania', 'Asia'];
-                state.domain = 'all';
-                state.sport = 'all';
-                renderAll();
-            });
+        function populateSelects() {
+            const opts = (arr, prefix) => arr.map(x => `<option value="${x.val}">${dictionary[state.lang][prefix + x.key]}</option>`).join('');
+            document.getElementById('track-select').innerHTML = opts([{val:'all',key:'track_all'},{val:'Elite',key:'track_elite'},{val:'Applied',key:'track_applied'}], '');
+            document.getElementById('region-select').innerHTML = opts([{val:'all',key:'region_all'},{val:'USA',key:'region_usa'},{val:'Asia',key:'region_asia'},{val:'Oceania',key:'region_oce'}], '');
+            document.getElementById('sport-select').innerHTML = opts([{val:'all',key:'sport_all'},{val:'Volleyball',key:'sport_vb'},{val:'Baseball',key:'sport_bb'},{val:'Basketball',key:'sport_bkb'},{val:'Cycling',key:'sport_cyc'},{val:'Yoga',key:'sport_yoga'}], '');
         }
 
-        function renderAll() {
-            const filtered = filterData();
-            renderList(filtered);
-            renderCharts(filtered);
-            renderVolleyballChart(); // Always render the VB chart
-        }
-
-        function filterData() {
-            return universities.filter(uni => {
-                if (!state.regions.includes(uni.region)) return false;
-                if (state.domain !== 'all' && !uni.focus.includes(state.domain)) return false;
-                if (state.sport !== 'all' && !uni.sports.includes(state.sport)) return false;
-                return true;
-            });
-        }
-
-        // --- 6. RENDER LIST ---
-        function renderList(data) {
-            const container = document.getElementById('uni-grid');
-            const countDisplay = document.getElementById('count-display');
-            container.innerHTML = '';
-            countDisplay.textContent = data.length;
-
-            if (data.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center py-10 text-brand-500 dark:text-brand-400 opacity-70">
-                    ${state.lang === 'zh' ? '沒有符合條件的學程。請放寬篩選標準。' : 'No programs match your filters. Please adjust.'}
-                </div>`;
-                return;
+        function initGlossary() {
+            const sel = document.getElementById('glossary-select');
+            // Re-render options but keep selection if possible
+            sel.innerHTML = `<option value="">${dictionary[state.lang].glossary_default}</option>` + 
+                            glossaryData.map(g => `<option value="${g.id}">${state.lang==='zh' ? g.term_zh + ' (' + g.term_en + ')' : g.term_en}</option>`).join('');
+            
+            // Restore selection if exists
+            if (state.selectedTerm) {
+                sel.value = state.selectedTerm;
+                // Trigger change to update definition text
+                const item = glossaryData.find(x => x.id === state.selectedTerm);
+                document.getElementById('glossary-def').textContent = item ? (state.lang==='zh'?item.def_zh:item.def_en) : '';
             }
 
-            data.forEach(uni => {
-                const name = state.lang === 'zh' ? uni.name_zh : uni.name_en;
-                const desc = state.lang === 'zh' ? uni.desc_zh : uni.desc_en;
-                
-                // Sport Icons
-                const sportsHtml = uni.sports.map(s => {
-                    if (s === 'Volleyball') return '<span title="Volleyball" class="mr-1 bg-brand-100 dark:bg-brand-700 px-1 rounded">🏐</span>';
-                    if (s === 'Baseball') return '<span title="Baseball" class="mr-1 bg-brand-100 dark:bg-brand-700 px-1 rounded">⚾</span>';
-                    if (s === 'Basketball') return '<span title="Basketball" class="mr-1 bg-brand-100 dark:bg-brand-700 px-1 rounded">🏀</span>';
-                    if (s === 'Health') return '<span title="Health/Yoga" class="mr-1 bg-brand-100 dark:bg-brand-700 px-1 rounded">🧘</span>';
-                    if (s === 'Outdoor') return '<span title="Outdoor" class="mr-1 bg-brand-100 dark:bg-brand-700 px-1 rounded">🏃</span>';
-                    return '';
-                }).join('');
-
-                const card = document.createElement('div');
-                card.className = 'bg-white dark:bg-brand-800 rounded-xl p-5 border border-brand-200 dark:border-brand-700 hover:shadow-lg transition flex flex-col justify-between';
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs font-bold text-brand-400 uppercase tracking-wide border border-brand-200 dark:border-brand-600 px-2 py-0.5 rounded">${uni.region}</span>
-                            <div class="flex text-lg">${sportsHtml}</div>
-                        </div>
-                        <h3 class="font-bold text-lg text-brand-800 dark:text-brand-100 leading-tight mb-1">${name}</h3>
-                        <p class="text-xs text-brand-500 dark:text-brand-400 mb-3 font-medium">${uni.program}</p>
-                        <p class="text-sm text-brand-600 dark:text-brand-300 mb-4 line-clamp-3 leading-relaxed">${desc}</p>
-                    </div>
-                    <div class="pt-3 border-t border-brand-100 dark:border-brand-700 flex justify-between items-center">
-                        <span class="text-xs text-brand-400">${state.lang === 'zh' ? '適配度分析' : 'Fit Analysis'}</span>
-                        <div class="flex gap-1">
-                            <div class="h-2 w-2 rounded-full ${uni.scores.theory > 7 ? 'bg-brand-accent' : 'bg-brand-200 dark:bg-brand-600'}" title="Econ Theory"></div>
-                            <div class="h-2 w-2 rounded-full ${uni.scores.legal > 6 ? 'bg-brand-accent' : 'bg-brand-200 dark:bg-brand-600'}" title="Legal"></div>
-                            <div class="h-2 w-2 rounded-full ${uni.scores.health > 7 ? 'bg-brand-accent' : 'bg-brand-200 dark:bg-brand-600'}" title="Health"></div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // --- 7. CHARTS (Chart.js) ---
-        let radarChartInstance = null;
-        let regionChartInstance = null;
-        let volleyballChartInstance = null;
-
-        function getChartColors() {
-            const isDark = state.theme === 'dark';
-            return { 
-                text: isDark ? '#94a3b8' : '#64748b', 
-                grid: isDark ? '#334155' : '#e2e8f0', 
-                accent: isDark ? '#fbbf24' : '#d97706', // Amber 400 vs 600
-                bg: isDark ? 'rgba(251, 191, 36, 0.2)' : 'rgba(217, 119, 6, 0.2)',
-                secondary: isDark ? '#475569' : '#cbd5e1'
+            sel.onchange = (e) => {
+                state.selectedTerm = e.target.value;
+                const item = glossaryData.find(x => x.id === e.target.value);
+                document.getElementById('glossary-def').textContent = item ? (state.lang==='zh'?item.def_zh:item.def_en) : '';
             };
         }
 
-        function renderCharts(data) {
-            if (!data) return;
-            const colors = getChartColors();
+        function resetFilters() {
+            state.filters = { track: 'all', region: 'all', sport: 'all' };
+            document.getElementById('track-select').value = 'all';
+            document.getElementById('region-select').value = 'all';
+            document.getElementById('sport-select').value = 'all';
+            renderDashboard();
+        }
 
-            // 1. Radar Chart (Average Scores)
-            const ctxRadar = document.getElementById('radarChart').getContext('2d');
-            let avg = { theory: 0, practice: 0, legal: 0, health: 0 };
+        function renderResearchTabs() {
+            const nav = document.getElementById('research-tabs-nav');
+            const content = document.getElementById('research-content');
+            const tabs = ['elite', 'vb', 'silver', 'law'];
             
-            if (data.length > 0) {
-                data.forEach(d => {
-                    avg.theory += d.scores.theory;
-                    avg.practice += d.scores.practice;
-                    avg.legal += d.scores.legal;
-                    avg.health += d.scores.health;
-                });
+            nav.innerHTML = tabs.map(id => `
+                <button onclick="switchTab('${id}')" class="px-6 py-3 font-serif font-bold text-xs uppercase tracking-widest transition-all whitespace-nowrap ${state.activeTab === id ? 'text-bcg-green dark:text-green-400 border-b-4 border-bcg-green dark:border-green-500 bg-gray-50 dark:bg-gray-700' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}">
+                    ${dictionary[state.lang]['tab_'+id]}
+                </button>
+            `).join('');
+
+            const data = researchData[state.activeTab];
+            const title = state.lang === 'zh' ? data.title_zh : data.title_en;
+            const text = state.lang === 'zh' ? data.content_zh : data.content_en;
+            const chartTitle = dictionary[state.lang][data.chartId];
+
+            content.innerHTML = `
+                <div class="flex flex-col md:flex-row gap-10">
+                    <div class="md:w-1/2">
+                        <h4 class="text-2xl font-serif font-bold mb-4 text-bcg-green dark:text-green-400">${title}</h4>
+                        <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-sans">${text}</p>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-50 dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-700">
+                        <h5 class="text-xs font-bold text-center mb-4 uppercase text-gray-400 tracking-widest">${chartTitle}</h5>
+                        <div class="chart-container"><canvas id="researchChart"></canvas></div>
+                    </div>
+                </div>
+            `;
+            setTimeout(renderResearchChart, 50);
+        }
+
+        window.switchTab = (id) => {
+            state.activeTab = id;
+            stopTTS(); // Force stop audio on tab switch
+            renderResearchTabs();
+        };
+
+        // --- Robust TTS ---
+        function toggleTTS() {
+            if (window.speechSynthesis.speaking) {
+               stopTTS();
+            } else {
+               startTTS();
+            }
+        }
+
+        function startTTS() {
+            window.speechSynthesis.cancel();
+            
+            const data = researchData[state.activeTab];
+            const title = state.lang === 'zh' ? data.title_zh : data.title_en;
+            const text = state.lang === 'zh' ? data.content_zh : data.content_en;
+            const intro = state.lang === 'zh' ? "策略洞察：" : "Strategic Insight: ";
+            
+            const fullText = intro + title + ". " + text;
+            ttsUtterance = new SpeechSynthesisUtterance(fullText);
+            
+            // Explicit Lang setting
+            ttsUtterance.lang = state.lang === 'zh' ? 'zh-TW' : 'en-US';
+            
+            // Voice Selection Logic
+            const voices = window.speechSynthesis.getVoices();
+            let voice = null;
+            if(state.lang === 'zh') {
+                voice = voices.find(v => v.name.includes('Google 國語')) || voices.find(v => v.name.includes('Yating')) || voices.find(v => v.name.includes('Mei-Jia')) || voices.find(v => v.lang.includes('zh'));
+            } else {
+                voice = voices.find(v => v.name.includes('Google UK English Male')) || voices.find(v => v.name.includes('Daniel')) || voices.find(v => v.lang.includes('en-GB') || v.lang.includes('en-US'));
+            }
+            if(voice) ttsUtterance.voice = voice;
+            
+            ttsUtterance.onstart = () => updateTTSButton(true);
+            ttsUtterance.onend = () => updateTTSButton(false);
+            ttsUtterance.onerror = (e) => { console.log(e); updateTTSButton(false); };
+
+            setTimeout(() => window.speechSynthesis.speak(ttsUtterance), 50);
+        }
+
+        function stopTTS() {
+            window.speechSynthesis.cancel();
+            updateTTSButton(false);
+        }
+
+        function updateTTSButton(playing) {
+            const icon = document.getElementById('tts-icon');
+            const label = document.getElementById('tts-label');
+            const indicator = document.getElementById('tts-indicator');
+            const dict = dictionary[state.lang];
+
+            if (playing) {
+                icon.textContent = "■"; label.textContent = dict.tts_pause;
+                indicator.classList.remove('hidden');
+            } else {
+                icon.textContent = "▶"; label.textContent = dict.tts_listen;
+                indicator.classList.add('hidden');
+            }
+        }
+
+        function renderDashboard() {
+            const filtered = filterUniversities();
+            document.getElementById('count-display').textContent = filtered.length;
+            const list = document.getElementById('uni-list');
+            
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="p-8 text-center text-gray-400 font-serif italic">No strategic matches found.</div>`;
+            } else {
+                const lbl = dictionary[state.lang];
+                list.innerHTML = filtered.map(u => `
+                    <div class="bg-white dark:bg-gray-800 border-l-4 ${u.track === 'Elite' ? 'border-l-bcg-green dark:border-l-green-500' : 'border-l-gray-300 dark:border-l-gray-600'} border border-gray-200 dark:border-gray-700 hover:shadow-sharp transition-shadow">
+                        <div class="p-5 flex justify-between items-center cursor-pointer" onclick="toggleCard(${u.id})">
+                            <div>
+                                ${u.track === 'Elite' ? `<span class="text-[10px] font-bold uppercase tracking-widest text-bcg-green dark:text-green-400 mb-1 block">★ ELITE TRACK</span>` : ''}
+                                <h4 class="font-serif font-bold text-lg text-gray-900 dark:text-white">${state.lang==='zh'?u.name_zh:u.name_en}</h4>
+                                <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">${u.region} • ${u.sports[0]}</div>
+                            </div>
+                            <span class="text-gray-300 text-xl">${state.expandedCard===u.id ? '−' : '+'}</span>
+                        </div>
+                        <div class="accordion-content ${state.expandedCard===u.id ? 'open' : ''} border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                            <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_tuition}</span><span class="dark:text-gray-300">${u.tuition}</span></div>
+                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_duration}</span><span class="dark:text-gray-300">${u.duration}</span></div>
+                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_courses}</span><span class="dark:text-gray-300">${state.lang==='zh'?u.courses_zh:u.courses_en}</span></div>
+                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_alumni}</span><span class="dark:text-gray-300">${state.lang==='zh'?u.alumni_zh:u.alumni_en}</span></div>
+                                <div class="col-span-1 md:col-span-2 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                    <span class="font-serif italic text-gray-600 dark:text-gray-400">${state.lang==='zh'?u.career_zh:u.career_en}</span>
+                                    <a href="${u.web}" target="_blank" class="text-bcg-green dark:text-green-400 font-bold hover:underline uppercase text-xs tracking-widest">${lbl.lbl_web} →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            renderRadar(filtered);
+        }
+
+        function filterUniversities() {
+            return universities.filter(u => 
+                (state.filters.track === 'all' || u.track === state.filters.track) &&
+                (state.filters.region === 'all' || u.region === state.filters.region) &&
+                (state.filters.sport === 'all' || u.sports.includes(state.filters.sport))
+            );
+        }
+
+        window.toggleCard = (id) => { state.expandedCard = state.expandedCard === id ? null : id; renderDashboard(); };
+
+        function renderRadar(data) {
+            const ctx = document.getElementById('radarChart'); if(!ctx) return;
+            if(radarChart) radarChart.destroy();
+            let avg = {theory:0, practice:0, legal:0, health:0};
+            if(data.length) {
+                data.forEach(u => { avg.theory+=u.scores.theory; avg.practice+=u.scores.practice; avg.legal+=u.scores.legal; avg.health+=u.scores.health; });
                 Object.keys(avg).forEach(k => avg[k] /= data.length);
             }
-
-            const radarConfig = {
+            const isDark = state.theme === 'dark';
+            const color = isDark ? '#10b981' : '#175e52';
+            
+            radarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: state.lang === 'zh' 
-                        ? ['學術理論 (Econ)', '產業實務', '法律合規', '健康/銀髮'] 
-                        : ['Theory (Econ)', 'Practice', 'Legal', 'Health'],
+                    labels: state.lang==='zh'?['理論','實務','法律','健康']:['Theory','Practice','Legal','Health'],
                     datasets: [{
-                        label: 'Average Score',
-                        data: [avg.theory, avg.practice, avg.legal, avg.health],
-                        backgroundColor: colors.bg,
-                        borderColor: colors.accent,
-                        borderWidth: 2,
-                        pointBackgroundColor: colors.accent,
-                        pointBorderColor: '#fff'
+                        label: 'Cohort', data: [avg.theory, avg.practice, avg.legal, avg.health],
+                        backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(23, 94, 82, 0.1)', 
+                        borderColor: color, pointBackgroundColor: color, borderWidth: 2
                     }]
                 },
                 options: {
-                    responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { color: colors.grid },
-                            grid: { color: colors.grid },
-                            pointLabels: { color: colors.text, font: { size: 11 } },
-                            suggestedMin: 0, suggestedMax: 10,
-                            ticks: { display: false, backdropColor: 'transparent' }
-                        }
-                    },
+                    scales: { r: { suggestedMin: 0, max: 10, ticks: { display: false }, grid: { color: isDark ? '#374151' : '#e5e7eb' }, pointLabels: { color: isDark ? '#9ca3af' : '#4b5563' } } },
                     plugins: { legend: { display: false } }
                 }
-            };
-
-            if (radarChartInstance) radarChartInstance.destroy();
-            radarChartInstance = new Chart(ctxRadar, radarConfig);
-
-            // 2. Region Chart (Doughnut)
-            const ctxRegion = document.getElementById('regionChart').getContext('2d');
-            const counts = { USA: 0, Canada: 0, Oceania: 0, Asia: 0 };
-            data.forEach(d => { if(counts[d.region] !== undefined) counts[d.region]++; });
-
-            const regionConfig = {
-                type: 'doughnut',
-                data: {
-                    labels: ['USA', 'Canada', 'Oceania', 'Asia'],
-                    datasets: [{
-                        data: [counts.USA, counts.Canada, counts.Oceania, counts.Asia],
-                        backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { position: 'bottom', labels: { color: colors.text, padding: 20 } } 
-                    }
-                }
-            };
-
-            if (regionChartInstance) regionChartInstance.destroy();
-            regionChartInstance = new Chart(ctxRegion, regionConfig);
+            });
         }
 
-        function renderVolleyballChart() {
-            const ctx = document.getElementById('volleyballChart').getContext('2d');
-            const colors = getChartColors();
+        function renderResearchChart() {
+            const ctx = document.getElementById('researchChart'); if(!ctx) return;
+            if(activeChart) activeChart.destroy();
             
-            // Labels and Data for Volleyball Models
-            const labels = state.lang === 'zh' 
-                ? ['PVF (USA)', 'SV.League (JP)', 'TVL (Taiwan)', 'NCAA (USA)']
-                : ['PVF (USA)', 'SV.League (JP)', 'TVL (Taiwan)', 'NCAA (USA)'];
+            const isZh = state.lang === 'zh';
+            const isDark = state.theme === 'dark';
+            const colors = isDark ? ['#10b981', '#34d399', '#6b7280'] : ['#175e52', '#2d8a76', '#9ca3af'];
+            const textColor = isDark ? '#9ca3af' : '#4b5563';
 
-            const chartConfig = {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: state.lang === 'zh' ? '商業成熟度 (Maturity)' : 'Commercial Maturity',
-                        data: [5, 9, 3, 10], 
-                        backgroundColor: colors.accent,
-                        barPercentage: 0.5,
-                        categoryPercentage: 0.8
-                    }, {
-                        label: state.lang === 'zh' ? '體制自由度 (Freedom)' : 'Structural Freedom',
-                        data: [9, 6, 2, 4], 
-                        backgroundColor: colors.secondary,
-                        barPercentage: 0.5,
-                        categoryPercentage: 0.8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { 
-                            ticks: { color: colors.text }, 
-                            grid: { display: false } 
-                        },
-                        y: { 
-                            display: true, 
-                            ticks: { display: false }, 
-                            grid: { color: colors.grid, drawBorder: false },
-                            max: 11
-                        }
-                    },
-                    plugins: { 
-                        legend: { labels: { color: colors.text } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ": " + context.raw + "/10";
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            let config = { type: 'bar', data: {}, options: { maintainAspectRatio: false, plugins: {legend: {position:'bottom', labels: {color: textColor, font:{family:'Inter'}}}} } };
 
-            if (volleyballChartInstance) volleyballChartInstance.destroy();
-            volleyballChartInstance = new Chart(ctx, chartConfig);
+            if(state.activeTab === 'elite') {
+                config.type = 'doughnut'; config.data = { labels: isZh?['理論','政策','管理']:['Theory','Policy','Mgmt'], datasets: [{ data: [50,30,20], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
+            } else if(state.activeTab === 'vb') {
+                config.data = { labels: isZh?['美國','日本','台灣']:['USA','Japan','Taiwan'], datasets: [{ label: isZh?'成熟度':'Maturity', data: [5,8,2], backgroundColor: colors[0] }, { label: isZh?'自由度':'Freedom', data: [9,6,3], backgroundColor: colors[2] }]};
+                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: isZh?'評分 (0-10)':'Score (0-10)', color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
+            } else if(state.activeTab === 'silver') {
+                config.type = 'line'; config.data = { labels: ['2025','2030','2035'], datasets: [{ label: isZh?'預估節省':'Savings', data: [100,150,220], borderColor: colors[0], backgroundColor: isDark ? 'rgba(16,185,129,0.1)' : 'rgba(23,94,82,0.1)', fill: true }]};
+                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: isZh?'指數 (2025=100)':'Index (2025=100)', color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
+            } else {
+                config.type = 'pie'; config.data = { labels: isZh?['合約','反托拉斯','智財']:['Contract','Antitrust','IP'], datasets: [{ data: [40,35,25], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
+            }
+            activeChart = new Chart(ctx, config);
         }
-
-        function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-        }
-
+        
+        // Ensure voices are loaded
+        window.speechSynthesis.onvoiceschanged = () => {};
     </script>
 </body>
 </html>
