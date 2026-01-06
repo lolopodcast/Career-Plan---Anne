@@ -46,32 +46,44 @@
 
     <style>
         body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; transition: background-color 0.3s, color 0.3s; }
-        * { border-radius: 0 !important; } /* Global Sharp Edges */
+        * { border-radius: 0 !important; } 
         
         .chart-container { position: relative; width: 100%; height: 300px; }
-        
-        /* Accordion Animation */
         .accordion-content { transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; max-height: 0; opacity: 0; overflow: hidden; }
         .accordion-content.open { max-height: 1200px; opacity: 1; }
         
-        /* Timeline Line (Desktop Only) */
-        @media (min-width: 768px) {
-            .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background-color: #e5e7eb; transform: translateX(-50%); z-index: 0; }
-            .dark .timeline-line { background-color: #374151; }
+        /* Interactive TTS Styles */
+        body.tts-active :is(h1, h2, h3, h4, p, li, span.readable):hover {
+            cursor: pointer;
+            background-color: rgba(254, 240, 138, 0.3); /* Light Yellow Hover */
+            transition: background-color 0.2s;
         }
         
-        /* Flip Card Utilities */
+        .speaking-highlight {
+            background-color: rgba(254, 240, 138, 0.8) !important; /* Strong Yellow Active */
+            border-left: 4px solid #175e52;
+            padding-left: 8px;
+            margin-left: -12px;
+            transition: all 0.2s;
+        }
+        .dark .speaking-highlight {
+            background-color: rgba(133, 77, 14, 0.6) !important;
+            border-left: 4px solid #4ade80;
+        }
+
+        /* Pulse Dot */
+        @keyframes pulse-dot { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+        .recording-dot { display: inline-block; width: 8px; height: 8px; background-color: #ef4444; border-radius: 50% !important; animation: pulse-dot 1.5s infinite; }
+        
+        /* Flip Card */
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
         
-        /* Tab Active State */
         .tab-active { border-bottom: 4px solid #175e52; color: #175e52; background-color: #f9fafb; }
         .dark .tab-active { border-bottom: 4px solid #4ade80; color: #4ade80; background-color: #374151; }
-        
-        /* Mobile Scrollbar Hide */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -89,8 +101,15 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <button id="theme-toggle" class="p-2 text-gray-400 hover:text-bcg-green dark:hover:text-green-400 transition-colors" aria-label="Toggle Theme"><span id="theme-icon">☾</span></button>
+                <!-- Click-to-Read Toggle -->
+                <button id="tts-mode-btn" class="flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 hover:border-bcg-green dark:hover:border-green-500 bg-white dark:bg-gray-800 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all group">
+                    <span class="mr-2">🎤</span>
+                    <span id="tts-mode-label">ENABLE AUDIO</span>
+                    <span id="tts-active-dot" class="hidden ml-2 recording-dot"></span>
+                </button>
+
                 <div class="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
+                <button id="theme-toggle" class="p-2 text-gray-400 hover:text-bcg-green dark:hover:text-green-400 transition-colors"><span id="theme-icon">☾</span></button>
                 <button id="lang-toggle" class="text-xs font-bold px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-bcg-green dark:hover:bg-green-600 hover:text-white transition-colors border border-transparent">EN / 繁中</button>
             </div>
         </div>
@@ -124,13 +143,11 @@
             </div>
         </section>
 
-        <!-- Timeline: Flip Cards (RWD Optimized) -->
+        <!-- Timeline -->
         <section class="mb-16">
             <h3 class="text-xl font-bold font-serif pb-4 border-b border-gray-300 dark:border-gray-600 mb-8 text-gray-900 dark:text-white" data-i18n="section_timeline">Application Roadmap: Junior Year to Graduation</h3>
-            <div class="relative">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="timeline-container">
-                    <!-- Populated by JS -->
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="timeline-container">
+                <!-- Populated by JS -->
             </div>
         </section>
 
@@ -213,7 +230,7 @@
 
     <!-- LOGIC -->
     <script>
-        const state = { lang: 'en', theme: 'light', activeTab: 'elite', filters: { track: 'all', region: 'all', sport: 'all' }, expandedCard: null, selectedTerm: 'antitrust' };
+        const state = { lang: 'en', theme: 'light', activeTab: 'elite', filters: { track: 'all', region: 'all', sport: 'all' }, expandedCard: null, selectedTerm: 'antitrust', ttsMode: false };
 
         const dictionary = {
             en: {
@@ -228,6 +245,7 @@
                 list_header: "Program Directory & Analysis", list_count_label: "Programs Identified", section_research: "Strategic Insights",
                 tab_elite: "Elite Academic", tab_vb: "Volleyball Sector", tab_silver: "Silver Economy", tab_law: "Sports Law",
                 btn_reset: "Reset Filters", lbl_tuition: "Investment", lbl_duration: "Duration", lbl_courses: "Curriculum", lbl_alumni: "Network", lbl_career: "Career", lbl_web: "Portal",
+                tts_enable: "ENABLE AUDIO", tts_disable: "DISABLE AUDIO",
                 sport_all: "All Sectors", sport_vb: "Volleyball", sport_bb: "Baseball", sport_bkb: "Basketball", sport_bad: "Badminton", sport_tt: "Table Tennis", sport_mara: "Marathon", sport_cyc: "Cycling", sport_yoga: "Yoga/Fitness",
                 track_all: "All Tracks", track_elite: "Elite Academic (PhD)", track_applied: "Applied Industry (Master)",
                 region_all: "Global", region_usa: "USA", region_can: "Canada", region_oce: "Oceania", region_asia: "Asia",
@@ -246,6 +264,7 @@
                 list_header: "學程名錄與分析", list_count_label: "符合條件", section_research: "策略洞察",
                 tab_elite: "菁英學術路徑", tab_vb: "排球產業專題", tab_silver: "銀髮經濟趨勢", tab_law: "運動法律與合規",
                 btn_reset: "重置篩選", lbl_tuition: "預估投資", lbl_duration: "修業年限", lbl_courses: "核心課程", lbl_alumni: "校友網絡", lbl_career: "職涯路徑", lbl_web: "官方網站",
+                tts_enable: "開啟語音", tts_disable: "關閉語音",
                 sport_all: "所有產業", sport_vb: "排球", sport_bb: "棒球", sport_bkb: "籃球", sport_bad: "羽球", sport_tt: "桌球", sport_mara: "馬拉松", sport_cyc: "自行車", sport_yoga: "瑜珈/健身",
                 track_all: "所有路徑", track_elite: "菁英學術 (PhD導向)", track_applied: "產業實務 (Master導向)",
                 region_all: "全球", region_usa: "美國", region_can: "加拿大", region_oce: "紐澳", region_asia: "亞洲",
@@ -320,10 +339,23 @@
         ];
 
         let activeChart = null, radarChart = null;
+        let synthesis = window.speechSynthesis;
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('version-date').textContent = new Date().toISOString().split('T')[0];
             initApp();
+            
+            // Poll for voices
+            let voiceAttempts = 0;
+            const loadVoices = setInterval(() => {
+                if (synthesis.getVoices().length > 0 || voiceAttempts > 10) {
+                    clearInterval(loadVoices);
+                }
+                voiceAttempts++;
+            }, 100);
+
+            // Click-to-Read Listener
+            document.body.addEventListener('click', handlePageClick);
         });
 
         function initApp() {
@@ -339,6 +371,7 @@
         function initSettings() {
             document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
             document.getElementById('lang-toggle').addEventListener('click', toggleLang);
+            document.getElementById('tts-mode-btn').addEventListener('click', toggleTTSMode);
             document.getElementById('reset-btn').addEventListener('click', resetFilters);
             ['track', 'region', 'sport'].forEach(id => document.getElementById(`${id}-select`).addEventListener('change', e => { state.filters[id] = e.target.value; renderDashboard(); }));
         }
@@ -354,6 +387,7 @@
 
         function toggleLang() {
             state.lang = state.lang === 'en' ? 'zh' : 'en';
+            synthesis.cancel();
             updateText();
             renderTimeline();
             initGlossary();
@@ -368,8 +402,92 @@
                 const key = el.getAttribute('data-i18n');
                 if(dict[key]) el.textContent = dict[key];
             });
+            updateTTSUI();
         }
 
+        // --- Click-to-Read Engine ---
+        function toggleTTSMode() {
+            state.ttsMode = !state.ttsMode;
+            if (state.ttsMode) {
+                document.body.classList.add('tts-active');
+            } else {
+                document.body.classList.remove('tts-active');
+                synthesis.cancel();
+                clearHighlights();
+            }
+            updateTTSUI();
+        }
+
+        function updateTTSUI() {
+            const label = document.getElementById('tts-mode-label');
+            const dot = document.getElementById('tts-active-dot');
+            const dict = dictionary[state.lang];
+            
+            if (state.ttsMode) {
+                label.textContent = dict.tts_disable;
+                dot.classList.remove('hidden');
+            } else {
+                label.textContent = dict.tts_enable;
+                dot.classList.add('hidden');
+            }
+        }
+
+        function handlePageClick(e) {
+            if (!state.ttsMode) return;
+
+            // Check if clicked element is text
+            const target = e.target.closest('h1, h2, h3, h4, p, li, span.readable');
+            if (target && target.innerText.trim().length > 0) {
+                // Prevent default if it's not a link/button inside
+                if (!e.target.closest('a, button')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                speakText(target);
+            }
+        }
+
+        function speakText(element) {
+            synthesis.cancel();
+            clearHighlights();
+
+            const text = element.innerText;
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = state.lang === 'zh' ? 'zh-TW' : 'en-GB';
+            u.rate = 0.95;
+
+            const voices = synthesis.getVoices();
+            let voice = null;
+            if (state.lang === 'zh') {
+                voice = voices.find(v => v.name.includes("Yating")) || 
+                        voices.find(v => v.name.includes("Hanhan")) || 
+                        voices.find(v => v.name.includes("Google 國語")) ||
+                        voices.find(v => v.lang === "zh-TW");
+            } else {
+                voice = voices.find(v => v.name.includes("Google UK English Male")) || 
+                        voices.find(v => v.name.includes("Daniel")) || 
+                        voices.find(v => v.lang === "en-GB");
+            }
+            if (voice) u.voice = voice;
+
+            u.onstart = () => {
+                element.classList.add('speaking-highlight');
+            };
+            u.onend = () => {
+                element.classList.remove('speaking-highlight');
+            };
+            u.onerror = () => {
+                element.classList.remove('speaking-highlight');
+            };
+
+            synthesis.speak(u);
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('.speaking-highlight').forEach(el => el.classList.remove('speaking-highlight'));
+        }
+
+        // --- Standard Logic ---
         function populateSelects() {
             const opts = (arr, prefix) => arr.map(x => `<option value="${x.val}">${dictionary[state.lang][prefix + x.key]}</option>`).join('');
             document.getElementById('track-select').innerHTML = opts([{val:'all',key:'track_all'},{val:'Elite',key:'track_elite'},{val:'Applied',key:'track_applied'}], '');
@@ -382,110 +500,63 @@
             sel.innerHTML = `<option value="">${dictionary[state.lang].glossary_default}</option>` + 
                             glossaryData.map(g => `<option value="${g.id}">${state.lang==='zh' ? g.term_zh + ' (' + g.term_en + ')' : g.term_en}</option>`).join('');
             
-            if (state.selectedTerm) {
-                sel.value = state.selectedTerm;
-                const item = glossaryData.find(x => x.id === state.selectedTerm);
-                document.getElementById('glossary-def').textContent = item ? (state.lang==='zh'?item.def_zh:item.def_en) : '';
-            }
-
-            sel.onchange = (e) => {
-                state.selectedTerm = e.target.value;
-                const item = glossaryData.find(x => x.id === e.target.value);
-                document.getElementById('glossary-def').textContent = item ? (state.lang==='zh'?item.def_zh:item.def_en) : '';
-            };
+            if (state.selectedTerm) { sel.value = state.selectedTerm; document.getElementById('glossary-def').textContent = (glossaryData.find(x => x.id === state.selectedTerm) || {}).def_en; } // Just init
+            sel.onchange = (e) => { state.selectedTerm = e.target.value; const item = glossaryData.find(x => x.id === e.target.value); document.getElementById('glossary-def').textContent = item ? (state.lang==='zh'?item.def_zh:item.def_en) : ''; };
         }
 
         function renderTimeline() {
             const container = document.getElementById('timeline-container');
             const isZh = state.lang === 'zh';
             const hint = dictionary[state.lang].card_front_hint;
-            
             container.innerHTML = timelineData.map((t) => `
                 <div class="group h-64 w-full perspective-1000 cursor-pointer">
                     <div class="relative h-full w-full transition-all duration-700 transform-style-3d group-hover:rotate-y-180">
                         <div class="absolute inset-0 backface-hidden bg-white dark:bg-gray-800 p-6 border-l-4 border-bcg-green dark:border-green-500 shadow-sm flex flex-col justify-center">
                             <span class="text-xs font-bold text-bcg-green dark:text-green-400 tracking-widest uppercase mb-2 block">${isZh ? t.period_zh : t.period_en}</span>
                             <h4 class="text-xl font-serif font-bold text-bcg-dark dark:text-white leading-tight">${isZh ? t.title_zh : t.title_en}</h4>
-                            <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
-                                <span class="text-[10px] uppercase tracking-widest text-gray-400">${hint} &rarr;</span>
-                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700"><span class="text-[10px] uppercase tracking-widest text-gray-400">${hint} &rarr;</span></div>
                         </div>
                         <div class="absolute inset-0 backface-hidden rotate-y-180 bg-bcg-green dark:bg-green-800 p-6 shadow-sm flex flex-col justify-center text-white">
                             <h4 class="text-sm font-bold uppercase tracking-widest mb-3 opacity-80 border-b border-white/20 pb-2">Action Plan</h4>
                             <p class="text-sm leading-relaxed whitespace-pre-line font-sans">${isZh ? t.desc_zh : t.desc_en}</p>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         function resetFilters() {
             state.filters = { track: 'all', region: 'all', sport: 'all' };
-            document.getElementById('track-select').value = 'all';
-            document.getElementById('region-select').value = 'all';
-            document.getElementById('sport-select').value = 'all';
+            document.getElementById('track-select').value = 'all'; document.getElementById('region-select').value = 'all'; document.getElementById('sport-select').value = 'all';
             renderDashboard();
         }
 
         function renderResearchTabs() {
             const nav = document.getElementById('research-tabs-nav');
             const content = document.getElementById('research-content');
-            const tabs = ['elite', 'vb', 'silver', 'law'];
-            
-            nav.innerHTML = tabs.map(id => `
-                <button onclick="switchTab('${id}')" class="px-6 py-3 font-serif font-bold text-xs uppercase tracking-widest transition-all whitespace-nowrap ${state.activeTab === id ? 'tab-active' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}">
-                    ${dictionary[state.lang]['tab_'+id]}
-                </button>
-            `).join('');
-
+            nav.innerHTML = ['elite', 'vb', 'silver', 'law'].map(id => `<button onclick="switchTab('${id}')" class="px-6 py-3 font-serif font-bold text-xs uppercase tracking-widest transition-all whitespace-nowrap ${state.activeTab === id ? 'tab-active' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}"> ${dictionary[state.lang]['tab_'+id]} </button>`).join('');
             const data = researchData[state.activeTab];
             const title = state.lang === 'zh' ? data.title_zh : data.title_en;
             const text = state.lang === 'zh' ? data.content_zh : data.content_en;
             const chartTitle = dictionary[state.lang][data.chartId];
-
-            content.innerHTML = `
-                <div class="flex flex-col md:flex-row gap-10">
-                    <div class="md:w-1/2">
-                        <h4 class="text-2xl font-serif font-bold mb-4 text-bcg-green dark:text-green-400">${title}</h4>
-                        <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-sans">${text}</p>
-                    </div>
-                    <div class="md:w-1/2 bg-gray-50 dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-700">
-                        <h5 class="text-xs font-bold text-center mb-4 uppercase text-gray-400 tracking-widest">${chartTitle}</h5>
-                        <div class="chart-container"><canvas id="researchChart"></canvas></div>
-                    </div>
-                </div>
-            `;
+            content.innerHTML = `<div class="flex flex-col md:flex-row gap-10"><div class="md:w-1/2"><h4 class="text-2xl font-serif font-bold mb-4 text-bcg-green dark:text-green-400">${title}</h4><p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-sans">${text}</p></div><div class="md:w-1/2 bg-gray-50 dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-700"><h5 class="text-xs font-bold text-center mb-4 uppercase text-gray-400 tracking-widest">${chartTitle}</h5><div class="chart-container"><canvas id="researchChart"></canvas></div></div></div>`;
             setTimeout(renderResearchChart, 50);
         }
 
-        window.switchTab = (id) => {
-            state.activeTab = id;
-            renderResearchTabs();
-        };
+        window.switchTab = (id) => { state.activeTab = id; renderResearchTabs(); };
 
         function renderResearchChart() {
             const ctx = document.getElementById('researchChart'); if(!ctx) return;
             if(activeChart) activeChart.destroy();
-            
             const isZh = state.lang === 'zh';
             const isDark = state.theme === 'dark';
             const colors = isDark ? ['#10b981', '#34d399', '#6b7280'] : ['#175e52', '#2d8a76', '#9ca3af'];
             const textColor = isDark ? '#9ca3af' : '#4b5563';
             const unit = dictionary[state.lang][researchData[state.activeTab].unitId];
-
             let config = { type: 'bar', data: {}, options: { maintainAspectRatio: false, plugins: {legend: {position:'bottom', labels: {color: textColor, font:{family:'Inter'}}}} } };
-
-            if(state.activeTab === 'elite') {
-                config.type = 'doughnut'; config.data = { labels: isZh?['理論','政策','管理']:['Theory','Policy','Mgmt'], datasets: [{ data: [50,30,20], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
-            } else if(state.activeTab === 'vb') {
-                config.data = { labels: isZh?['美國','日本','台灣']:['USA','Japan','Taiwan'], datasets: [{ label: isZh?'成熟度':'Maturity', data: [5,8,2], backgroundColor: colors[0] }, { label: isZh?'自由度':'Freedom', data: [9,6,3], backgroundColor: colors[2] }]};
-                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
-            } else if(state.activeTab === 'silver') {
-                config.type = 'line'; config.data = { labels: ['2025','2030','2035'], datasets: [{ label: isZh?'預估節省':'Savings', data: [100,150,220], borderColor: colors[0], backgroundColor: isDark ? 'rgba(16,185,129,0.1)' : 'rgba(23,94,82,0.1)', fill: true }]};
-                config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } };
-            } else {
-                config.type = 'pie'; config.data = { labels: isZh?['合約','反托拉斯','智財']:['Contract','Antitrust','IP'], datasets: [{ data: [40,35,25], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] };
-            }
+            if(state.activeTab === 'elite') { config.type = 'doughnut'; config.data = { labels: isZh?['理論','政策','管理']:['Theory','Policy','Mgmt'], datasets: [{ data: [50,30,20], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] }; }
+            else if(state.activeTab === 'vb') { config.data = { labels: isZh?['美國','日本','台灣']:['USA','Japan','Taiwan'], datasets: [{ label: isZh?'成熟度':'Maturity', data: [5,8,2], backgroundColor: colors[0] }, { label: isZh?'自由度':'Freedom', data: [9,6,3], backgroundColor: colors[2] }]}; config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } }; }
+            else if(state.activeTab === 'silver') { config.type = 'line'; config.data = { labels: ['2025','2030','2035'], datasets: [{ label: isZh?'預估節省':'Savings', data: [100,150,220], borderColor: colors[0], backgroundColor: isDark ? 'rgba(16,185,129,0.1)' : 'rgba(23,94,82,0.1)', fill: true }]}; config.options.scales = { x: { ticks: { color: textColor }, grid: { display: false } }, y: { title: {display: true, text: unit, color: textColor}, ticks: { color: textColor }, grid: { color: isDark ? '#374151' : '#e5e7eb' } } }; }
+            else { config.type = 'pie'; config.data = { labels: isZh?['合約','反托拉斯','智財']:['Contract','Antitrust','IP'], datasets: [{ data: [40,35,25], backgroundColor: colors, borderColor: isDark ? '#111827' : '#fff' }] }; }
             activeChart = new Chart(ctx, config);
         }
 
@@ -493,75 +564,51 @@
             const filtered = filterUniversities();
             document.getElementById('count-display').textContent = filtered.length;
             const list = document.getElementById('uni-list');
-            
-            if (filtered.length === 0) {
-                list.innerHTML = `<div class="p-8 text-center text-gray-400 font-serif italic">No strategic matches found.</div>`;
-            } else {
-                const lbl = dictionary[state.lang];
-                list.innerHTML = filtered.map(u => `
-                    <div class="bg-white dark:bg-gray-800 border-l-4 ${u.track === 'Elite' ? 'border-l-bcg-green dark:border-l-green-500' : 'border-l-gray-300 dark:border-l-gray-600'} border border-gray-200 dark:border-gray-700 hover:shadow-sharp transition-shadow">
-                        <div class="p-5 flex justify-between items-center cursor-pointer" onclick="toggleCard(${u.id})">
-                            <div>
-                                ${u.track === 'Elite' ? `<span class="text-[10px] font-bold uppercase tracking-widest text-bcg-green dark:text-green-400 mb-1 block">★ ELITE TRACK</span>` : ''}
-                                <h4 class="font-serif font-bold text-lg text-gray-900 dark:text-white">${state.lang==='zh'?u.name_zh:u.name_en}</h4>
-                                <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">${u.region} • ${u.sports[0]}</div>
-                            </div>
-                            <span class="text-gray-300 text-xl">${state.expandedCard===u.id ? '−' : '+'}</span>
+            if (filtered.length === 0) { list.innerHTML = `<div class="p-8 text-center text-gray-400 font-serif italic">No strategic matches found.</div>`; return; }
+            const lbl = dictionary[state.lang];
+            list.innerHTML = filtered.map(u => `
+                <div class="bg-white dark:bg-gray-800 border-l-4 ${u.track === 'Elite' ? 'border-l-bcg-green dark:border-l-green-500' : 'border-l-gray-300 dark:border-l-gray-600'} border border-gray-200 dark:border-gray-700 hover:shadow-sharp transition-shadow">
+                    <div class="p-5 flex justify-between items-center cursor-pointer" onclick="toggleCard(${u.id})">
+                        <div>
+                            ${u.track === 'Elite' ? `<span class="text-[10px] font-bold uppercase tracking-widest text-bcg-green dark:text-green-400 mb-1 block">★ ELITE TRACK</span>` : ''}
+                            <h4 class="font-serif font-bold text-lg text-gray-900 dark:text-white">${state.lang==='zh'?u.name_zh:u.name_en}</h4>
+                            <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">${u.region} • ${u.sports[0]}</div>
                         </div>
-                        <div class="accordion-content ${state.expandedCard===u.id ? 'open' : ''} border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                            <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
-                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_tuition}</span><span class="dark:text-gray-300">${u.tuition}</span></div>
-                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_duration}</span><span class="dark:text-gray-300">${u.duration}</span></div>
-                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_courses}</span><span class="dark:text-gray-300">${state.lang==='zh'?u.courses_zh:u.courses_en}</span></div>
-                                <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_alumni}</span><span class="dark:text-gray-300">${state.lang==='zh'?u.alumni_zh:u.alumni_en}</span></div>
-                                <div class="col-span-1 md:col-span-2 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                                    <span class="font-serif italic text-gray-600 dark:text-gray-400">${state.lang==='zh'?u.career_zh:u.career_en}</span>
-                                    <a href="${u.web}" target="_blank" class="text-bcg-green dark:text-green-400 font-bold hover:underline uppercase text-xs tracking-widest">${lbl.lbl_web} →</a>
-                                </div>
+                        <span class="text-gray-300 text-xl">${state.expandedCard===u.id ? '−' : '+'}</span>
+                    </div>
+                    <div class="accordion-content ${state.expandedCard===u.id ? 'open' : ''} border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                            <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_tuition}</span><span class="dark:text-gray-300">${u.tuition}</span></div>
+                            <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_duration}</span><span class="dark:text-gray-300">${u.duration}</span></div>
+                            <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_courses}</span><span class="dark:text-gray-300">${state.lang==='zh'?u.courses_zh:u.courses_en}</span></div>
+                            <div><span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">${lbl.lbl_alumni}</span><span class="dark:text-gray-300">${state.lang==='zh'?u.alumni_zh:u.alumni_en}</span></div>
+                            <div class="col-span-1 md:col-span-2 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                <span class="font-serif italic text-gray-600 dark:text-gray-400">${state.lang==='zh'?u.career_zh:u.career_en}</span>
+                                <a href="${u.web}" target="_blank" class="text-bcg-green dark:text-green-400 font-bold hover:underline uppercase text-xs tracking-widest">${lbl.lbl_web} →</a>
                             </div>
                         </div>
                     </div>
-                `).join('');
-            }
+                </div>`).join('');
             renderRadar(filtered);
         }
 
-        function filterUniversities() {
-            return universities.filter(u => 
-                (state.filters.track === 'all' || u.track === state.filters.track) &&
-                (state.filters.region === 'all' || u.region === state.filters.region) &&
-                (state.filters.sport === 'all' || u.sports.includes(state.filters.sport))
-            );
-        }
-
+        function filterUniversities() { return universities.filter(u => (state.filters.track === 'all' || u.track === state.filters.track) && (state.filters.region === 'all' || u.region === state.filters.region) && (state.filters.sport === 'all' || u.sports.includes(state.filters.sport))); }
         window.toggleCard = (id) => { state.expandedCard = state.expandedCard === id ? null : id; renderDashboard(); };
 
         function renderRadar(data) {
             const ctx = document.getElementById('radarChart'); if(!ctx) return;
             if(radarChart) radarChart.destroy();
             let avg = {theory:0, practice:0, legal:0, health:0};
-            if(data.length) {
-                data.forEach(u => { avg.theory+=u.scores.theory; avg.practice+=u.scores.practice; avg.legal+=u.scores.legal; avg.health+=u.scores.health; });
-                Object.keys(avg).forEach(k => avg[k] /= data.length);
-            }
+            if(data.length) { data.forEach(u => { avg.theory+=u.scores.theory; avg.practice+=u.scores.practice; avg.legal+=u.scores.legal; avg.health+=u.scores.health; }); Object.keys(avg).forEach(k => avg[k] /= data.length); }
             const isDark = state.theme === 'dark';
             const color = isDark ? '#10b981' : '#175e52';
-            
             radarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: state.lang==='zh'?['理論','實務','法律','健康']:['Theory','Practice','Legal','Health'],
-                    datasets: [{
-                        label: 'Cohort', data: [avg.theory, avg.practice, avg.legal, avg.health],
-                        backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(23, 94, 82, 0.1)', 
-                        borderColor: color, pointBackgroundColor: color, borderWidth: 2
-                    }]
+                    datasets: [{ label: 'Cohort', data: [avg.theory, avg.practice, avg.legal, avg.health], backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(23, 94, 82, 0.1)', borderColor: color, pointBackgroundColor: color, borderWidth: 2 }]
                 },
-                options: {
-                    maintainAspectRatio: false,
-                    scales: { r: { suggestedMin: 0, max: 10, ticks: { display: false }, grid: { color: isDark ? '#374151' : '#e5e7eb' }, pointLabels: { color: isDark ? '#9ca3af' : '#4b5563' } } },
-                    plugins: { legend: { display: false } }
-                }
+                options: { maintainAspectRatio: false, scales: { r: { suggestedMin: 0, max: 10, ticks: { display: false }, grid: { color: isDark ? '#374151' : '#e5e7eb' }, pointLabels: { color: isDark ? '#9ca3af' : '#4b5563' } } }, plugins: { legend: { display: false } } }
             });
         }
     </script>
