@@ -46,11 +46,19 @@
 
     <style>
         body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; transition: background-color 0.3s, color 0.3s; }
-        * { border-radius: 0 !important; }
+        * { border-radius: 0 !important; } /* Global Sharp Edges */
         
         .chart-container { position: relative; width: 100%; height: 300px; }
+        
+        /* Accordion Animation */
         .accordion-content { transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; max-height: 0; opacity: 0; overflow: hidden; }
         .accordion-content.open { max-height: 1200px; opacity: 1; }
+        
+        /* Timeline Line (Desktop Only) */
+        @media (min-width: 768px) {
+            .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background-color: #e5e7eb; transform: translateX(-50%); z-index: 0; }
+            .dark .timeline-line { background-color: #374151; }
+        }
         
         /* Flip Card Utilities */
         .perspective-1000 { perspective: 1000px; }
@@ -58,103 +66,97 @@
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
-
-        /* Audio Animation */
-        @keyframes pulse-dot { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
-        .speaking-dot { display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50% !important; margin-left: 8px; animation: pulse-dot 1.5s infinite; }
         
         /* Tab Active State */
         .tab-active { border-bottom: 4px solid #175e52; color: #175e52; background-color: #f9fafb; }
         .dark .tab-active { border-bottom: 4px solid #4ade80; color: #4ade80; background-color: #374151; }
+        
+        /* Mobile Scrollbar Hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-bcg-gray text-bcg-dark dark:bg-gray-900 dark:text-gray-100 font-sans flex flex-col min-h-screen">
 
     <!-- Header -->
     <header class="bg-white dark:bg-gray-900 border-b-2 border-bcg-green dark:border-green-600 sticky top-0 z-50 shadow-sm transition-colors">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center">
             <div class="flex items-center cursor-pointer group" onclick="window.scrollTo(0,0)">
-                <div class="w-1.5 h-8 bg-bcg-green dark:bg-green-500 mr-4 group-hover:h-10 transition-all duration-300"></div>
-                <h1 class="text-xl font-serif font-bold tracking-tight text-bcg-dark dark:text-white">
+                <div class="w-1.5 h-8 bg-bcg-green dark:bg-green-500 mr-3 group-hover:h-10 transition-all duration-300"></div>
+                <h1 class="text-lg md:text-xl font-serif font-bold tracking-tight text-bcg-dark dark:text-white">
                     STRATEGY <span class="font-sans font-light text-gray-400">| SPORTS ECON</span>
                 </h1>
             </div>
             
-            <div class="flex items-center space-x-4">
-                <button id="theme-toggle" class="p-2 text-gray-400 hover:text-bcg-green dark:hover:text-green-400 transition-colors"><span id="theme-icon">☾</span></button>
+            <div class="flex items-center space-x-3">
+                <button id="theme-toggle" class="p-2 text-gray-400 hover:text-bcg-green dark:hover:text-green-400 transition-colors" aria-label="Toggle Theme"><span id="theme-icon">☾</span></button>
                 <div class="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
                 <button id="lang-toggle" class="text-xs font-bold px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-bcg-green dark:hover:bg-green-600 hover:text-white transition-colors border border-transparent">EN / 繁中</button>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full">
 
         <!-- Executive Summary -->
-        <section class="mb-14">
+        <section class="mb-12 md:mb-16">
             <div class="bg-bcg-green/10 dark:bg-green-900/20 border-l-4 border-bcg-green p-4 mb-6">
-                <p class="text-sm font-bold text-bcg-green dark:text-green-400 uppercase tracking-widest" data-i18n="target_audience">Target Strategy: Junior Dual Major (Sports Affairs + Economics)</p>
+                <p class="text-xs md:text-sm font-bold text-bcg-green dark:text-green-400 uppercase tracking-widest" data-i18n="target_audience">Target Strategy: Junior Dual Major (Sports Affairs + Economics)</p>
             </div>
-            <h2 class="text-4xl md:text-5xl font-serif font-bold mb-8 leading-tight text-gray-900 dark:text-white">
+            <h2 class="text-3xl md:text-5xl font-serif font-bold mb-8 leading-tight text-gray-900 dark:text-white">
                 <span data-i18n="hero_title_1">From Theory to Industry Leader</span><br>
-                <span class="text-gray-500 dark:text-gray-400 font-sans font-light text-2xl md:text-4xl" data-i18n="hero_title_2">Strategic Pathways in Sports Economics & Law</span>
+                <span class="text-gray-500 dark:text-gray-400 font-sans font-light text-xl md:text-4xl" data-i18n="hero_title_2">Strategic Pathways in Sports Economics & Law</span>
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-gray-300 dark:border-gray-700 pt-6">
-                <div class="pr-6 border-r border-gray-200 dark:border-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0 border-t border-gray-300 dark:border-gray-700 pt-6">
+                <div class="md:pr-6 md:border-r border-gray-200 dark:border-gray-700">
                     <h3 class="font-bold text-sm uppercase mb-2 text-gray-900 dark:text-gray-200" data-i18n="tag_elite_head">Elite Academia</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 font-serif" data-i18n="tag_elite_desc">Chicago, Harvard, Stanford</p>
                 </div>
-                <div class="px-6 border-r border-gray-200 dark:border-gray-700">
+                <div class="md:px-6 md:border-r border-gray-200 dark:border-gray-700">
                     <h3 class="font-bold text-sm uppercase mb-2 text-gray-900 dark:text-gray-200" data-i18n="tag_vb_head">Market Focus</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 font-serif" data-i18n="tag_vb_desc">Volleyball Economics</p>
                 </div>
-                <div class="pl-6">
+                <div class="md:pl-6">
                     <h3 class="font-bold text-sm uppercase mb-2 text-gray-900 dark:text-gray-200" data-i18n="tag_silver_head">Future Trend</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 font-serif" data-i18n="tag_silver_desc">Silver Economy Strategy</p>
                 </div>
             </div>
         </section>
 
-        <!-- Timeline: Flip Cards -->
+        <!-- Timeline: Flip Cards (RWD Optimized) -->
         <section class="mb-16">
             <h3 class="text-xl font-bold font-serif pb-4 border-b border-gray-300 dark:border-gray-600 mb-8 text-gray-900 dark:text-white" data-i18n="section_timeline">Application Roadmap: Junior Year to Graduation</h3>
-            <!-- Grid for Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="timeline-container">
-                <!-- JS Populated Flip Cards -->
+            <div class="relative">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="timeline-container">
+                    <!-- Populated by JS -->
+                </div>
             </div>
         </section>
 
-        <!-- Strategic Insights (Tabs + TTS) -->
-        <!-- Moved UP per request -->
+        <!-- Strategic Insights (Moved Up) -->
         <section class="mb-16" id="insights-section">
             <div class="flex flex-col md:flex-row justify-between items-end border-b border-gray-300 dark:border-gray-600 mb-0 gap-4 md:gap-0">
-                <div class="flex items-center gap-4">
-                    <h3 class="text-xl font-bold font-serif pb-4 text-gray-900 dark:text-white mb-0" data-i18n="section_research">Strategic Insights</h3>
-                    
-                    <!-- TTS Button -->
-                    <button id="tts-btn" class="flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 hover:border-bcg-green dark:hover:border-green-500 bg-white dark:bg-gray-800 text-[10px] font-bold uppercase tracking-widest transition-all mb-3 ml-2">
-                        <span id="tts-icon" class="mr-2 text-bcg-green dark:text-green-400">▶</span>
-                        <span id="tts-label" class="dark:text-gray-200">READ INSIGHT</span>
-                        <span id="tts-indicator" class="hidden speaking-dot"></span>
-                    </button>
+                <h3 class="text-xl font-bold font-serif pb-4 text-gray-900 dark:text-white mb-0" data-i18n="section_research">Strategic Insights</h3>
+                <div class="flex space-x-1 overflow-x-auto w-full md:w-auto no-scrollbar" id="research-tabs-nav">
+                    <!-- Tabs -->
                 </div>
-
-                <div class="flex space-x-1 overflow-x-auto w-full md:w-auto" id="research-tabs-nav"></div>
             </div>
-            
-            <div id="research-content" class="bg-white dark:bg-gray-800 p-8 border border-t-0 border-gray-200 dark:border-gray-700 shadow-sharp"></div>
+            <div id="research-content" class="bg-white dark:bg-gray-800 p-6 md:p-8 border border-t-0 border-gray-200 dark:border-gray-700 shadow-sharp">
+                <!-- Content -->
+            </div>
         </section>
 
-        <!-- Glossary -->
-        <!-- Moved DOWN per request -->
-        <section class="mb-16 bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-gray-700 shadow-sharp">
+        <!-- Glossary (Moved Down) -->
+        <section class="mb-16 bg-white dark:bg-gray-800 p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sharp">
             <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6 border-b border-gray-100 dark:border-gray-700 pb-2" data-i18n="glossary_section">Core Terminology</h4>
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/3 border-r border-gray-100 dark:border-gray-700 pr-8">
+            <div class="flex flex-col md:flex-row gap-6 md:gap-8">
+                <div class="md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700 pb-6 md:pb-0 md:pr-8">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-bcg-green dark:text-green-400 mb-3" data-i18n="glossary_label">Select Term</label>
                     <select id="glossary-select" class="w-full bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-300 dark:border-gray-600 focus:border-bcg-green dark:focus:border-green-500 outline-none py-3 font-serif text-sm dark:text-white cursor-pointer transition-colors"></select>
                 </div>
                 <div class="md:w-2/3">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3" data-i18n="glossary_def_label">Definition</label>
                     <p id="glossary-def" class="text-lg font-serif text-bcg-dark dark:text-gray-200 leading-relaxed min-h-[4rem]"></p>
                 </div>
             </div>
@@ -163,9 +165,11 @@
         <!-- Program Dashboard -->
         <section id="dashboard">
             <h3 class="text-xl font-bold font-serif mb-6 pb-4 border-b border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" data-i18n="list_header">Program Directory & Analysis</h3>
+            
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Filters -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 sticky top-24 shadow-sharp">
+                    <div class="bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 lg:sticky lg:top-24 shadow-sharp">
                         <h4 class="font-bold text-xs uppercase tracking-widest text-gray-400 mb-6" data-i18n="filter_header">Refine View</h4>
                         <div class="space-y-6">
                             <div><label class="block text-xs font-bold mb-2 text-bcg-green dark:text-green-400" data-i18n="filter_track">ACADEMIC TRACK</label><select id="track-select" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 p-3 text-sm dark:text-white focus:border-bcg-green outline-none"></select></div>
@@ -175,15 +179,19 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Main Content -->
                 <div class="lg:col-span-3 space-y-6">
                     <div class="bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sharp">
                         <h4 class="text-xs font-bold text-center mb-4 uppercase tracking-widest text-gray-400" data-i18n="chart_radar">Competency Matrix</h4>
                         <div class="chart-container"><canvas id="radarChart"></canvas></div>
                     </div>
+                    
                     <div class="bg-bcg-green dark:bg-green-700 text-white px-5 py-3 text-xs font-bold uppercase tracking-widest flex justify-between items-center shadow-sharp">
                         <span data-i18n="list_count_label">Programs Identified</span>
                         <span id="count-display" class="text-lg font-serif">0</span>
                     </div>
+
                     <div id="uni-list" class="space-y-4"></div>
                 </div>
             </div>
@@ -220,7 +228,6 @@
                 list_header: "Program Directory & Analysis", list_count_label: "Programs Identified", section_research: "Strategic Insights",
                 tab_elite: "Elite Academic", tab_vb: "Volleyball Sector", tab_silver: "Silver Economy", tab_law: "Sports Law",
                 btn_reset: "Reset Filters", lbl_tuition: "Investment", lbl_duration: "Duration", lbl_courses: "Curriculum", lbl_alumni: "Network", lbl_career: "Career", lbl_web: "Portal",
-                tts_read: "READ INSIGHT", tts_pause: "STOP", tts_resume: "RESUME",
                 sport_all: "All Sectors", sport_vb: "Volleyball", sport_bb: "Baseball", sport_bkb: "Basketball", sport_bad: "Badminton", sport_tt: "Table Tennis", sport_mara: "Marathon", sport_cyc: "Cycling", sport_yoga: "Yoga/Fitness",
                 track_all: "All Tracks", track_elite: "Elite Academic (PhD)", track_applied: "Applied Industry (Master)",
                 region_all: "Global", region_usa: "USA", region_can: "Canada", region_oce: "Oceania", region_asia: "Asia",
@@ -239,7 +246,6 @@
                 list_header: "學程名錄與分析", list_count_label: "符合條件", section_research: "策略洞察",
                 tab_elite: "菁英學術路徑", tab_vb: "排球產業專題", tab_silver: "銀髮經濟趨勢", tab_law: "運動法律與合規",
                 btn_reset: "重置篩選", lbl_tuition: "預估投資", lbl_duration: "修業年限", lbl_courses: "核心課程", lbl_alumni: "校友網絡", lbl_career: "職涯路徑", lbl_web: "官方網站",
-                tts_read: "朗讀洞察", tts_pause: "停止", tts_resume: "繼續",
                 sport_all: "所有產業", sport_vb: "排球", sport_bb: "棒球", sport_bkb: "籃球", sport_bad: "羽球", sport_tt: "桌球", sport_mara: "馬拉松", sport_cyc: "自行車", sport_yoga: "瑜珈/健身",
                 track_all: "所有路徑", track_elite: "菁英學術 (PhD導向)", track_applied: "產業實務 (Master導向)",
                 region_all: "全球", region_usa: "美國", region_can: "加拿大", region_oce: "紐澳", region_asia: "亞洲",
@@ -313,21 +319,11 @@
             { id: 12, name_en: "Deakin University", name_zh: "迪肯大學", region: "Oceania", track: "Applied", sports: ["Basketball"], tuition: "$42k/yr", duration: "2 Yr", courses_en: "Sport Marketing, Law", courses_zh: "運動行銷, 法律", alumni_en: "Tennis Aus Execs", alumni_zh: "澳網高層", career_en: "Event Director", career_zh: "賽事總監", web: "https://www.deakin.edu.au/", scores: {theory:7, practice:10, legal:6, health:8} }
         ];
 
-        let activeChart = null, radarChart = null, ttsUtterance = null;
-        let synthesis = window.speechSynthesis;
+        let activeChart = null, radarChart = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('version-date').textContent = new Date().toISOString().split('T')[0];
             initApp();
-            
-            // Poll for voices (Browser fix)
-            let voiceAttempts = 0;
-            const loadVoices = setInterval(() => {
-                if (synthesis.getVoices().length > 0 || voiceAttempts > 10) {
-                    clearInterval(loadVoices);
-                }
-                voiceAttempts++;
-            }, 100);
         });
 
         function initApp() {
@@ -343,7 +339,6 @@
         function initSettings() {
             document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
             document.getElementById('lang-toggle').addEventListener('click', toggleLang);
-            document.getElementById('tts-btn').addEventListener('click', toggleReader);
             document.getElementById('reset-btn').addEventListener('click', resetFilters);
             ['track', 'region', 'sport'].forEach(id => document.getElementById(`${id}-select`).addEventListener('change', e => { state.filters[id] = e.target.value; renderDashboard(); }));
         }
@@ -359,7 +354,6 @@
 
         function toggleLang() {
             state.lang = state.lang === 'en' ? 'zh' : 'en';
-            stopReader();
             updateText();
             renderTimeline();
             initGlossary();
@@ -374,7 +368,6 @@
                 const key = el.getAttribute('data-i18n');
                 if(dict[key]) el.textContent = dict[key];
             });
-            updateReaderUI(false);
         }
 
         function populateSelects() {
@@ -402,7 +395,6 @@
             };
         }
 
-        // --- New Timeline Flip Cards ---
         function renderTimeline() {
             const container = document.getElementById('timeline-container');
             const isZh = state.lang === 'zh';
@@ -411,7 +403,6 @@
             container.innerHTML = timelineData.map((t) => `
                 <div class="group h-64 w-full perspective-1000 cursor-pointer">
                     <div class="relative h-full w-full transition-all duration-700 transform-style-3d group-hover:rotate-y-180">
-                        <!-- Front -->
                         <div class="absolute inset-0 backface-hidden bg-white dark:bg-gray-800 p-6 border-l-4 border-bcg-green dark:border-green-500 shadow-sm flex flex-col justify-center">
                             <span class="text-xs font-bold text-bcg-green dark:text-green-400 tracking-widest uppercase mb-2 block">${isZh ? t.period_zh : t.period_en}</span>
                             <h4 class="text-xl font-serif font-bold text-bcg-dark dark:text-white leading-tight">${isZh ? t.title_zh : t.title_en}</h4>
@@ -419,7 +410,6 @@
                                 <span class="text-[10px] uppercase tracking-widest text-gray-400">${hint} &rarr;</span>
                             </div>
                         </div>
-                        <!-- Back -->
                         <div class="absolute inset-0 backface-hidden rotate-y-180 bg-bcg-green dark:bg-green-800 p-6 shadow-sm flex flex-col justify-center text-white">
                             <h4 class="text-sm font-bold uppercase tracking-widest mb-3 opacity-80 border-b border-white/20 pb-2">Action Plan</h4>
                             <p class="text-sm leading-relaxed whitespace-pre-line font-sans">${isZh ? t.desc_zh : t.desc_en}</p>
@@ -470,73 +460,8 @@
 
         window.switchTab = (id) => {
             state.activeTab = id;
-            stopReader();
             renderResearchTabs();
         };
-
-        // --- Simplified TTS Engine ---
-        function toggleReader() {
-            if (synthesis.speaking || synthesis.pending) {
-                stopReader();
-            } else {
-                startReader();
-            }
-        }
-
-        function stopReader() {
-            synthesis.cancel();
-            updateReaderUI(false);
-        }
-
-        function startReader() {
-            synthesis.cancel();
-
-            const data = researchData[state.activeTab];
-            const title = state.lang === 'zh' ? data.title_zh : data.title_en;
-            const text = state.lang === 'zh' ? data.content_zh : data.content_en;
-            const fullText = title + ". " + text;
-
-            const u = new SpeechSynthesisUtterance(fullText);
-            u.lang = state.lang === 'zh' ? 'zh-TW' : 'en-GB';
-            u.rate = 0.9; 
-
-            const voices = synthesis.getVoices();
-            let voice = null;
-            if (state.lang === 'zh') {
-                voice = voices.find(v => v.name.includes("Yating")) || 
-                        voices.find(v => v.name.includes("Mei-Jia")) || 
-                        voices.find(v => v.name.includes("Google 國語")) ||
-                        voices.find(v => v.lang === "zh-TW");
-            } else {
-                voice = voices.find(v => v.name.includes("Google UK English Male")) || 
-                        voices.find(v => v.name.includes("Daniel")) || 
-                        voices.find(v => v.lang === "en-GB");
-            }
-            if (voice) u.voice = voice;
-
-            u.onend = () => updateReaderUI(false);
-            u.onerror = (e) => { console.log(e); updateReaderUI(false); };
-
-            updateReaderUI(true);
-            synthesis.speak(u);
-        }
-
-        function updateReaderUI(isReading) {
-            const icon = document.getElementById('tts-icon');
-            const label = document.getElementById('tts-label');
-            const dot = document.getElementById('tts-indicator');
-            const dict = dictionary[state.lang];
-
-            if (isReading) {
-                icon.textContent = "■";
-                label.textContent = dict.tts_pause;
-                dot.classList.remove('hidden');
-            } else {
-                icon.textContent = "▶";
-                label.textContent = dict.tts_read;
-                dot.classList.add('hidden');
-            }
-        }
 
         function renderResearchChart() {
             const ctx = document.getElementById('researchChart'); if(!ctx) return;
